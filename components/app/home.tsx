@@ -54,7 +54,7 @@ export default function Home(): JSX.Element {
           </Stack>
         </Center>
 
-        <Center mt="8">
+        <Center mt="8" mb="16">
           <Stack width="full" spacing="8">
             <p className="text-4xl text-gray-800 font-black">
               Collections
