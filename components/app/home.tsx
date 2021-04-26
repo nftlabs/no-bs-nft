@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react"
 import { ContentWrapper } from 'components/ContentWrapper';
 
-export default function Dashboard(): JSX.Element {
+export default function Home(): JSX.Element {
   
   return (
     <>
       <ContentWrapper>
-        <Center px="8" mt="16">
+        <Center mt="16">
           <Stack width="full">
             <div className="flex justify-between items-baseline">
               <p className="text-4xl text-gray-800 font-black">
@@ -27,7 +27,7 @@ export default function Dashboard(): JSX.Element {
           </Stack>
         </Center>
 
-        <Center px="8" mt="16">
+        <Center mt="16">
           <Stack width="full">
             <p className="text-4xl text-gray-800 font-black">
               Collections
