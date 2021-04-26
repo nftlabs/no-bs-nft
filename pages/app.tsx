@@ -35,19 +35,29 @@ export default function Dashboard(): JSX.Element {
       <ContentWrapper>
         {pageViews[view]}
       </ContentWrapper>
-      <div className="w-full flex flex-row justify-between p-8 fixed bottom-0 border border-red-500 bg-white">
-        <Button variant="link" onClick={() => setView(Routes.Home)}>
-          Home
-        </Button>
-        <Button variant="link" onClick={() => setView(Routes.Create)}>
-          Create
-        </Button>
-        <Button variant="link">
-          Sell
-        </Button>
-        <Button variant="link">
-          Explore
-        </Button>
+      <div 
+        className="lg:w-20 lg:items-center lg:p-4 lg:rounded-full lg:shadow-lg lg:flex-col lg:right-8 xl:right-32 lg:bottom-48 w-full flex flex-row justify-between p-8 fixed bottom-0 border border-gray-500 bg-white"
+      >
+        <div className="lg:my-4">        
+          <Button variant="link" onClick={() => setView(Routes.Home)}>
+            Home
+          </Button>
+        </div>
+        <div className="lg:my-4">        
+          <Button variant="link" onClick={() => setView(Routes.Create)}>
+            Create
+          </Button>
+        </div>
+        <div className="lg:my-4">        
+          <Button variant="link" onClick={() => {}}>
+            Sell
+          </Button>
+        </div>
+        <div className="lg:my-4">        
+          <Button variant="link" onClick={() => {}}>
+            Explore
+          </Button>
+        </div>
       </div>
     </>
   )
