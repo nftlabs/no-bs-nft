@@ -43,7 +43,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
 
   // Function to get all data from skyDB as JSON (not exported)
   const getDataFromSkyDB = async () => {
-    console.log("Calling getDataFromSkyDB")
+    // console.log("Calling getDataFromSkyDB")
     try {
       const { data, revision } = await skyPortalRef.current.db.getJSON(
         skydbPublicKey.current,

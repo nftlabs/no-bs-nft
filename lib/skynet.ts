@@ -5,7 +5,30 @@ interface NFTMetadata {
   description: string;
   image: string
 }
-/// Uploads metadata json to skynet
+
+/// Uploads media file (image, video, pdf etc.) to skynet
+/// Returns the URI for the media file. Returns empty string '' if there's an error.
+export const uploadMediaToSkynet = async (mediaFile: File) => {
+
+  const portal = "https://siasky.net/";
+  const skyportal = new SkynetClient(portal);
+
+  try {
+    const { skylink } = skyportal.uploadFile(mediaFile);
+    const parsedSkylink: string | null = parseSkylink(skylink);
+      
+    console.log("Metadata Skylink: ", skylink);
+
+    return portal + parsedSkylink
+  } catch(err) {
+    console.log(err);
+    return ''
+  }
+}
+
+
+/// Uploads metadata (JS object as JSON) to skynet.
+/// Returns the URI for the metadata. Returns empty string '' if there's an error.
 export const uploadMetadataToSkynet = async (metadata: NFTMetadata) => {
 
   const portal = "https://siasky.net/";
@@ -19,11 +42,13 @@ export const uploadMetadataToSkynet = async (metadata: NFTMetadata) => {
 
   try {
     const { skylink } = await skyportal.uploadFile(metadataFile);
+    const parsedSkylink: string | null = parseSkylink(skylink);
       
     console.log("Metadata Skylink: ", skylink);
 
-    return skylink;
+    return portal + parsedSkylink;
   } catch (err) {
     console.log(err);
+    return ''
   }
 }

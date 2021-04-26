@@ -10,8 +10,6 @@ import { Web3EagerConnector } from "components/Web3EagerConnector";
 
 import { ContractWrapper } from "lib/AppContext";
 
-import NavbarWrapper from "components/NavbarWrapper";
-
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider);
   return library;
@@ -27,10 +25,8 @@ function App({Component, pageProps }: AppProps): JSX.Element {
       >  
         <ChakraProvider>   
           <Web3EagerConnector />
-          <ContractWrapper>
-            <NavbarWrapper>
-              <Component {...pageProps} /> 
-            </NavbarWrapper>
+          <ContractWrapper>          
+            <Component {...pageProps} /> 
           </ContractWrapper>
 
         </ChakraProvider>           

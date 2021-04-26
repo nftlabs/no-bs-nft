@@ -49,11 +49,11 @@ export default function useUser(): UserHandler {
     const loginData = await res.json();
 
     if (res.status === 200) {
-      toast({ title: "Magic.link wallet retrieved", status: "success" });
+      toast({ title: "Login successful", status: "success" });
       setUser({...loginData})
       return true
     } else {
-      toast({ title: "Magic.link wallet could not be generated. Please use Metamask.", status: "error" });
+      toast({ title: "Login failed.", status: "error" });
       return false
     }
     // router.push("/marketplace");
