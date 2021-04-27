@@ -14,7 +14,7 @@ import { useDropzone } from "react-dropzone";
 
 import { ContentWrapper } from "components/ContentWrapper";
 
-export default function Create(): JSX.Element {
+export default function Create({setView}: any): JSX.Element {
 
 	const [files, setFiles] = useState<File[]>([]);
 

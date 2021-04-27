@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import Image from 'next/image'
 
-import { SettingsIcon } from '@chakra-ui/icons';
 import {
   Stack,
-  Link,
   HStack,
   Center,
   Button,
 } from "@chakra-ui/react"
 import { ContentWrapper } from 'components/ContentWrapper';
 
-export default function Home(): JSX.Element {
+export default function Home({setView}: any): JSX.Element {
 
   const [NFTs, setNFTs] = useState<any[]>([]);
   const [collections, setCollections] = useState<any[]>([]);
@@ -20,14 +18,18 @@ export default function Home(): JSX.Element {
     <>
       <div className="mb-32">
         <ContentWrapper>
-          <Center mt="16">
+          <Center mt="8">
             <Stack width="full" spacing="8">
               <div className="flex justify-between items-baseline">
                 <p className="text-4xl text-gray-800 font-black">
                   Your NFTs
                 </p>
 
-                <SettingsIcon />
+                <Image 
+                  src="/settings.svg"
+                  width={24}
+                  height={24}
+                />
               </div>
 
               <Stack>
@@ -36,8 +38,13 @@ export default function Home(): JSX.Element {
                 </p>
                 
                 <Center>
-                  <button className="border-2 border-black bg-white shadow-md rounded-full h-10 w-64">
-                    Create an NFT
+                  <button onClick={() => setView("create")}>                  
+                    <div className="flex flex-col">
+                      <p className="text-center text-lg">
+                        Create an NFT
+                      </p>                      
+                      <div className="h-0.5 border border-black bg-black shadow-pink" />                                            
+                    </div>
                   </button>
                 </Center>
 
@@ -46,8 +53,13 @@ export default function Home(): JSX.Element {
                 </p>
 
                 <Center>
-                  <button className="border-2 border-black bg-white shadow-md rounded-full h-10 w-64">
-                    Buy an NFT
+                  <button onClick={() => {}}>                  
+                    <div className="flex flex-col">
+                      <p className="text-center text-lg">
+                        Buy an NFT
+                      </p>                      
+                      <div className="h-0.5 border border-black bg-black shadow-pink" />                                            
+                    </div>
                   </button>
                 </Center>
 
@@ -65,11 +77,16 @@ export default function Home(): JSX.Element {
               <Stack>
                 <p className="text-center text-lg mb-4">
                   {`You haven't saved any collections!`}
-                  </p>
+                </p>
                 
                 <Center>
-                  <button className="border-2 border-black bg-white shadow-md rounded-full h-10 w-64">
-                    Create an NFT collection
+                  <button onClick={() => {}}>                  
+                    <div className="flex flex-col">
+                      <p className="text-center text-lg">
+                        Create an NFT collection
+                      </p>                      
+                      <div className="h-0.5 border border-black bg-black shadow-pink" />                                            
+                    </div>
                   </button>
                 </Center>
 
@@ -78,8 +95,13 @@ export default function Home(): JSX.Element {
                 </p>
 
                 <Center>
-                  <button className="border-2 border-black bg-white shadow-md rounded-full h-10 w-64">
-                    Explore NFT collections
+                  <button onClick={() => {}}>                  
+                    <div className="flex flex-col">
+                      <p className="text-center text-lg">
+                        Explore NFT collections
+                      </p>                      
+                      <div className="h-0.5 border border-black bg-black shadow-pink" />                                            
+                    </div>
                   </button>
                 </Center>
               </Stack>

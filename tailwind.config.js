@@ -12,6 +12,7 @@ module.exports = {
      '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
       inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
       none: 'none',
+      pink: '0 4px 6px 1px rgba(109, 0, 219, 0.16), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
     }
   },
   variants: {
