@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link';
 import {
 	Center,
 	HStack,
@@ -6,7 +7,7 @@ import {
 } from "@chakra-ui/layout";
 
 import { ContentWrapper } from "components/ContentWrapper";
-import AppNavbar from 'components/AppNavbar';
+import { OffAppNavbar } from 'components/AppNavbar';
 
 export default function NFT(): JSX.Element {
 
@@ -19,7 +20,7 @@ export default function NFT(): JSX.Element {
 	return (
 		<>
 			<ContentWrapper>
-				<div className="flex flex-col mt-8">
+				<div className="flex flex-col mt-8 mb-32">
 					<Center>
 						<div className="overflow-hidden rounded-xl shadow-xl" style={{width: "320px", height: "240px"}}>
 							<Image 
@@ -86,7 +87,7 @@ export default function NFT(): JSX.Element {
 					</div>
 				</div>
 			</ContentWrapper>
-			<AppNavbar />
+			<OffAppNavbar />      
 		</>
 	)
 }
