@@ -1,7 +1,7 @@
   import Head from "next/head";
 
-const TITLE = "No bullshit NFTs";
-const DESCRIPTION = "Mint an individual NFT or a collection without the extra platform bullshit.";
+const TITLE = "OpenApe";
+const DESCRIPTION = "Anyone, anywhere, can create and sell NFTs.";
 const URL = "https://nobullshitnft.com";
 const IMAGE = ``;
 
@@ -23,7 +23,7 @@ export const MetaData: React.FC<MetaDataProps> = ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>{title}</title>
       <meta property="og:title" content={title} />
-      <meta property="og:site_name" content="No bullshit NFT" />
+      <meta property="og:site_name" content="OpenApe" />
       <meta name="description" content={description} />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={image} />
@@ -32,7 +32,7 @@ export const MetaData: React.FC<MetaDataProps> = ({
       <meta property="twitter:image" content={image} />
       <meta property="twitter:title" content={title} />
       <meta property="twitter:description" content={description} />
-      <meta property="twitter:site" content="@NoBullshitNFT" />
+      <meta property="twitter:site" content="@NFTLabsHQ" />
       <meta property="twitter:card" content="summary" />
     </Head>
   );
