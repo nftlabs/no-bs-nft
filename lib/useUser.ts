@@ -29,34 +29,19 @@ export default function useUser(): UserHandler {
   }, [])
 
   async function login(email: string) {
-    const token = await magicClient?.auth.loginWithMagicLink({
-      email,
-    });
-
-    const res: any = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        token,
-        provider: "magiclink",
-      }),
-    });
-
-    console.log("Login response: ", await res)
-    const loginData = await res.json();
-
-    if (res.status === 200) {
-      toast({ title: "Login successful", status: "success" });
-      setUser({...loginData})
-      return true
-    } else {
-      toast({ title: "Login failed.", status: "error" });
-      return false
+    const loginMeta = await magicClient?.auth.loginWithMagicLink({email: email})
+    if(!loginMeta){
+      console.error("failed to login !loginMeta")
+      return;
     }
-    // router.push("/marketplace");
+
+    const magicMeta = await magicClient?.user.getMetadata();
+    if(!magicMeta){
+      console.error("failed to login !magicMeta")
+      return;
+    }
+
+    console.log({magicMeta, loginMeta})
   }
 
   async function logout() {
