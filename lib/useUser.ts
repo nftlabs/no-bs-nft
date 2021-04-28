@@ -1,114 +1,59 @@
-import { useToast } from "@chakra-ui/react";
 import { magicClient } from "lib/magic";
-import { useRouter } from "next/router";
-import { AuthUserResponse } from "pages/api/user";
 import { useEffect } from "react";
-import useSWR from "swr";
 import { useState } from 'react'
 type UserHandler = {
-  user?: AuthUserResponse;
-  // setUser: (properties: Record<string, any>) => void; 
-  // login: (email: string) => void;
+  user?: any;
   login: any;
-  // logout: () => void;
   logout: any;
+  loading: boolean;
 };
 
 export default function useUser(): UserHandler {
-  const toast = useToast();
-  const router = useRouter();
-  // const { data: user, mutate } = useSWR<AuthUserResponse>("/api/user");
-  const { data, mutate } = useSWR<any>("/api/user");
-
   const [user, setUser] = useState<any>('');
-
-  useEffect(() => {
-    if(data && Object.keys(data).includes(user)) {
-      setUser(data.user);
-    }
-  }, [])
+  const [loading, setLoading] = useState(true);
 
   async function login(email: string) {
-    const loginMeta = await magicClient?.auth.loginWithMagicLink({email: email})
-    if(!loginMeta){
+    const loginDid = await magicClient?.auth.loginWithMagicLink({email: email})
+    if(!loginDid){
       console.error("failed to login !loginMeta")
       return;
     }
 
-    const magicMeta = await magicClient?.user.getMetadata();
-    if(!magicMeta){
-      console.error("failed to login !magicMeta")
+    const userMeta = await magicClient?.user.getMetadata();
+    if(!userMeta){
+      console.error("failed to login !userMeta")
       return;
     }
 
-    console.log({magicMeta, loginMeta})
+    console.log({userMeta, loginDid})
+    setUser(userMeta);
   }
 
   async function logout() {
-    await fetch("/api/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await mutate((user: any) => {
-      if (user) {
-        return {
-          ...user,
-          isLoggedIn: false,
-        };
-      } else {
-        return user;
-      }
-    });
-    // console.log("result on mutate", result);
-    setUser(result);
-    // router.push("/login");
+    await magicClient?.user.logout();
+    setUser(null);
   }
 
-  // function setUser(properties: Record<string, any>): void {
-  //   mutate((user) => {
-  //     if (user) {
-  //       let updated = { ...user };
-
-  //       Object.keys(updated).forEach((key) => {
-  //         if (Object.keys(properties).includes(key)) {
-  //           updated = {
-  //             ...updated,
-  //             [key]: properties[key],
-  //           };
-  //         }
-  //       });
-
-  //       return updated;
-  //     } else {
-  //       return user;
-  //     }
-  //   });
-  // }
-
   useEffect(() => {
-    let isCancelled = false;
-    if (user && user.isLoggedIn) {
-      magicClient?.user.isLoggedIn().then((isMagicLoggedIn) => {
-        if (isCancelled) {
-          return;
-        }
 
-        if (!isMagicLoggedIn) {
-          // console.log("Forced logged out by unsynced auth state");
-          logout();
-        } else if (!Object.keys(user).includes("username")) {
-          // router.push("/onboarding");
+    if(!user){
+      console.log("magic user is loggedIn", magicClient?.user.isLoggedIn());
+      (async () => {
+        const isLoggedIn = await magicClient?.user.isLoggedIn();
+        if(isLoggedIn){
+          try{
+            const userMeta = await magicClient?.user.getMetadata();
+            setUser(userMeta);
+          }catch(err){
+            console.error("failed to check magic user", err);
+          }
         }
-      });
+        setLoading(false);
+      })();
+    } else if(loading){
+      setLoading(false);
     }
-    return () => {
-      isCancelled = false;
-    };
   }, [user]);
 
-  // return { user, setUser, login, logout };
-  return { user, login, logout };
+  return { user, login, logout, loading };
 }

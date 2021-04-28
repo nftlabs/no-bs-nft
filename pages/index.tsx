@@ -9,26 +9,20 @@ import {
     useToast
 } from '@chakra-ui/react'
 
-import { ContentWrapper } from 'components/ContentWrapper';
+import { ContentWrapper } from '../components/ContentWrapper';
 
-import useUser from 'lib/useUser';
-import { errorToast } from 'lib/toast';
+import useUser from '../lib/useUser';
+import { errorToast } from '../lib/toast';
 
 export default function App(): JSX.Element {
 
-    const { user, login, logout } = useUser();
+    const { user, login, logout, loading } = useUser();
     const [email, setEmail] = useState<string>('');
 
     const [authLoading, setAuthLoading] = useState<boolean>(false);
     const [authLoadingText, setAuthLoadingText] = useState<string>('');
 
     const toast = useToast();
-
-    useEffect(() => {
-        if(user?.isLoggedIn) {
-            console.log("Logged in user: ", user.email)
-        }
-    }, [user]);
 
     const onboardUser = async () => {
         setAuthLoadingText('Entering the metaverse')
@@ -53,6 +47,14 @@ export default function App(): JSX.Element {
         return re.test(email);
     }
 
+    if(loading){
+        return (<Stack height="100vh" width="100vw">
+            <Center height="100vh" width="100vw">
+                <Spinner/>
+            </Center>
+        </Stack>)
+    }
+
     return (
         <>
             <ContentWrapper>
@@ -68,41 +70,42 @@ export default function App(): JSX.Element {
                         </div>
 
                         <Center>
-                            <Stack>
-                                <Input
-                                    border="1px"
-                                    borderColor="black"
-                                    placeholder="Enter your email address"
-                                    width="320px"
+                            {user ? (<>I'm logged in</>) : (<Stack>
+                        <Input
+                            border="1px"
+                            borderColor="black"
+                            placeholder="Enter your email address"
+                            width="320px"
 
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    errorBorderColor="crimson"
-                                    isInvalid={email != '' && !validateEmail(email)}
-                                />
-                                <Button
-                                    onClick={onboardUser}
-                                    className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-                                >
-                                    {!authLoading
-                                        ? (
-                                            "Enter the Metaverse"
-                                        )
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            errorBorderColor="crimson"
+                            isInvalid={email != '' && !validateEmail(email)}
+                        />
+                        <Button
+                            onClick={onboardUser}
+                            className="border-2 border-black bg-white shadow-md rounded-lg h-10"
+                        >
+                            {!authLoading
+                                ? (
+                                    "Enter the Metaverse"
+                                )
 
-                                        : (
-                                            <div className="flex flex-row justify-center items-center">
-                                                <Spinner size="sm" />
-                                                <p className="mx-2">
-                                                    {authLoadingText}
-                                                </p>
-                                            </div>
-                                        )
-                                    }
-                                </Button>
-                            </Stack>
-                        </Center>
+                                : (
+                                    <div className="flex flex-row justify-center items-center">
+                                        <Spinner size="sm" />
+                                        <p className="mx-2">
+                                            {authLoadingText}
+                                        </p>
+                                    </div>
+                                )
+                            }
+                        </Button>
                     </Stack>
-                </Center>
+            )}
+        </Center>
+    </Stack>
+</Center>
             </ContentWrapper>
         </>
     )

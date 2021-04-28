@@ -1,20 +1,50 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "declaration": false,
+    "declarationMap": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "scripthost",
+      "es2015",
+      "es2016.array.include",
+      "es2017.object",
+      "esnext.asynciterable"
+    ],
     "noEmit": true,
+    "rootDir": ".",
+    "typeRoots": ["@types", "node_modules/@types", "../../node_modules/@types"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve"
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "strict": true,
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "lint": {
+          "duplicateProperties": "error",
+          "emptyRules": "error",
+          "unknownProperties": "error",
+          "universalSelector": "error",
+          "zeroUnits": "error"
+        }
+      }
+    ]
+  }
 }

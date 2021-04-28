@@ -1,0 +1,52 @@
+# itself
+.eslintrc.js
+
+# dependencies
+**/node_modules/*
+
+# generated files
+**/__relay__/*
+**/__generated__/*
+**/messages/*
+
+# app files
+**/proxy/*
+**/scripts/*
+android-hosts-file
+
+# build artifacts
+**/.next/*
+**/build/*
+**/dist/*
+**/esnext/*
+**/module/*
+**/out/*
+**/service-worker.js
+**/types/*
+
+# more-ui build artifacts, with alt paths because eslint is weird about pathing sometimes
+**/more-ui/styles/*
+**/styles/Styles*
+**/styles/tachyonStyle*
+
+# unlintable file types
+*.csv
+*.d.ts.map
+*.graphql
+*.groovy
+*.html
+*.ico
+*.jpg
+*.json
+*.lock
+*.log
+*.md
+*.pem
+*.png
+*.scss
+*.txt
+*.yaml
+*.yml
+*.xml
+*.mp4
+Dockerfile*
