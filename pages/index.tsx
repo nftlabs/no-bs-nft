@@ -1,4 +1,4 @@
-import React,  { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     Center, 
@@ -70,43 +70,44 @@ export default function App(): JSX.Element {
                         </div>
 
                         <Center>
-                            {user ? (<>I'm logged in</>) : (<Stack>
-                        <Input
-                            border="1px"
-                            borderColor="black"
-                            placeholder="Enter your email address"
-                            width="320px"
+                            {user ? (<>I'm logged in</>) : 
+                                (<Stack>
+                                    <Input
+                                        border="1px"
+                                        borderColor="black"
+                                        placeholder="Enter your email address"
+                                        width="320px"
 
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            errorBorderColor="crimson"
-                            isInvalid={email != '' && !validateEmail(email)}
-                        />
-                        <Button
-                            onClick={onboardUser}
-                            className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-                        >
-                            {!authLoading
-                                ? (
-                                    "Enter the Metaverse"
-                                )
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        errorBorderColor="crimson"
+                                        isInvalid={email != '' && !validateEmail(email)}
+                                    />
+                                    <Button
+                                        onClick={onboardUser}
+                                        className="border-2 border-black bg-white shadow-md rounded-lg h-10"
+                                    >
+                                        {!authLoading
+                                            ? (
+                                                "Enter the Metaverse"
+                                            )
 
-                                : (
-                                    <div className="flex flex-row justify-center items-center">
-                                        <Spinner size="sm" />
-                                        <p className="mx-2">
-                                            {authLoadingText}
-                                        </p>
-                                    </div>
-                                )
-                            }
-                        </Button>
-                    </Stack>
-            )}
-        </Center>
-    </Stack>
-</Center>
-            </ContentWrapper>
-        </>
-    )
+                                            : (
+                                                <div className="flex flex-row justify-center items-center">
+                                                    <Spinner size="sm" />
+                                                    <p className="mx-2">
+                                                        {authLoadingText}
+                                                    </p>
+                                                </div>
+                                            )
+                                        }
+                                    </Button>
+                                </Stack>
+                        )}
+                    </Center>
+                </Stack>
+            </Center>
+        </ContentWrapper>
+    </>
+)
 }

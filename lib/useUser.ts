@@ -1,4 +1,4 @@
-import { magicClient } from "lib/magic";
+import { magicClient } from "../lib/magic";
 import { useEffect } from "react";
 import { useState } from 'react'
 type UserHandler = {
