@@ -1,22 +1,38 @@
 import React, { useEffect, useState } from 'react';
 
 import {
-    Center, 
+    Center,
+    Image,
+    Flex,
     Stack,
     Button,
     Input,
     Spinner,
-    useToast
-} from '@chakra-ui/react'
+    Text,
+    useToast,
+    HStack,
+} from '@chakra-ui/react';
 
 import { ContentWrapper } from '../components/ContentWrapper';
 
 import useUser from '../lib/useUser';
 import { errorToast } from '../lib/toast';
 
-export default function App(): JSX.Element {
+const validateEmail = (emailToValidate: string) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(emailToValidate);
+};
 
-    const { user, login, logout, loading } = useUser();
+const LoggedInLanding: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
+    return (
+        <Stack>
+            <Text>Logged In as: {user.email}</Text>
+        </Stack>
+    );
+};
+LoggedInLanding.displayName = 'LoggedInLanding';
+
+const LoggedOutLanding: React.FC<{ login: any }> = ({ login }) => {
     const [email, setEmail] = useState<string>('');
 
     const [authLoading, setAuthLoading] = useState<boolean>(false);
@@ -25,34 +41,62 @@ export default function App(): JSX.Element {
     const toast = useToast();
 
     const onboardUser = async () => {
-        setAuthLoadingText('Entering the metaverse')
+        setAuthLoadingText('Entering the metaverse');
         setAuthLoading(true);
 
         try {
             await login(email);
-        } catch(err) {
-            errorToast(
-                toast,
-                "Something went wrong. Please try again."
-            )
-            console.log(err)
+        } catch (err) {
+            errorToast(toast, 'Something went wrong. Please try again.');
+            console.log(err);
         }
 
-        setAuthLoading(false)
+        setAuthLoading(false);
         setAuthLoadingText('');
-    }
+    };
 
-    function validateEmail(email: string) {
-        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    }
+    return (
+        <Stack>
+            <Input
+                border="1px"
+                borderColor="black"
+                placeholder="Enter your email address"
+                width="320px"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                errorBorderColor="crimson"
+                isInvalid={email !== '' && !validateEmail(email)}
+            />
+            <Button
+                onClick={onboardUser}
+                className="border-2 border-black bg-white shadow-md rounded-lg h-10"
+            >
+                {!authLoading ? (
+                    'Enter the Metaverse'
+                ) : (
+                    <Flex flexDir="row" justify="center" alignItems="center">
+                        <Spinner size="sm" />
+                        <Text mx={2}>{authLoadingText}</Text>
+                    </Flex>
+                )}
+            </Button>
+        </Stack>
+    );
+};
 
-    if(loading){
-        return (<Stack height="100vh" width="100vw">
-            <Center height="100vh" width="100vw">
-                <Spinner/>
-            </Center>
-        </Stack>)
+LoggedOutLanding.displayName = 'LoggedOutLanding';
+
+export default function App(): JSX.Element {
+    const { user, login, logout, loading } = useUser();
+
+    if (loading) {
+        return (
+            <Stack height="100vh" width="100vw">
+                <Center height="100vh" width="100vw">
+                    <Spinner />
+                </Center>
+            </Stack>
+        );
     }
 
     return (
@@ -60,54 +104,55 @@ export default function App(): JSX.Element {
             <ContentWrapper>
                 <Center mt="16">
                     <Stack maxW="800px">
-                        <div className="mb-4 px-4">
-                            <p className="text-5xl md:text-6xl text-gray-800 font-bold lg:font-black mb-4 leading-snug lg:leading-snug text-center">
+                        <Stack as={Flex} mb={4} px={4}>
+                            {user ? (
+                                <HStack alignSelf="flex-end">
+                                    <Button
+                                        onClick={() => {
+                                            logout();
+                                        }}
+                                    >
+                                        Logout
+                                    </Button>
+                                </HStack>
+                            ) : (
+                                ''
+                            )}
+
+                            <Center>
+                                <Image width="120px" height="120px" src="/openape-logo.svg" />
+                            </Center>
+                            <Text
+                                color="gray.800"
+                                fontSize="4xl"
+                                fontWeight="bold"
+                                mb={4}
+                                textAlign="center"
+                            >
                                 Anyone, anywhere, can create and sell NFTs
-                            </p>
-                            <p className="text-xl text-gray-700 font-light text-center">
+                            </Text>
+                            <Text
+                                fontSize="2xl"
+                                color="gray.700"
+                                textAlign="center"
+                                fontWeight="light"
+                            >
                                 Make any digital content ownable on the blockchain.
-                            </p>
-                        </div>
+                            </Text>
+                        </Stack>
 
                         <Center>
-                            {user ? (<>I'm logged in</>) : 
-                                (<Stack>
-                                    <Input
-                                        border="1px"
-                                        borderColor="black"
-                                        placeholder="Enter your email address"
-                                        width="320px"
-
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        errorBorderColor="crimson"
-                                        isInvalid={email != '' && !validateEmail(email)}
-                                    />
-                                    <Button
-                                        onClick={onboardUser}
-                                        className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-                                    >
-                                        {!authLoading
-                                            ? (
-                                                "Enter the Metaverse"
-                                            )
-
-                                            : (
-                                                <div className="flex flex-row justify-center items-center">
-                                                    <Spinner size="sm" />
-                                                    <p className="mx-2">
-                                                        {authLoadingText}
-                                                    </p>
-                                                </div>
-                                            )
-                                        }
-                                    </Button>
-                                </Stack>
-                        )}
-                    </Center>
-                </Stack>
-            </Center>
-        </ContentWrapper>
-    </>
-)
+                            {user ? (
+                                <LoggedInLanding user={user} logout={logout} />
+                            ) : (
+                                <LoggedOutLanding login={login} />
+                            )}
+                        </Center>
+                    </Stack>
+                </Center>
+            </ContentWrapper>
+        </>
+    );
 }
+
+App.displayName = 'App';
