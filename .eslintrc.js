@@ -8,6 +8,12 @@ module.exports = {
         'plugin:relay/strict',
     ],
     rules: {
+        'prettier/prettier': [
+            'error',
+            {
+                'endOfLine': 'auto'
+            }
+        ],
         // typescript
         '@typescript-eslint/ban-ts-comment': [
             'error',
