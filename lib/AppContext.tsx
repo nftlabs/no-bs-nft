@@ -1,107 +1,113 @@
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useDefaultSkyDB } from "lib/useSkyDB";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useDefaultSkyDB } from './useSkyDB';
 
 export const ContractContext = createContext<any>('');
 
 export function ContractWrapper({ NFT, BidExecutor, children }: any) {
-  
-  const context = useWeb3React<Web3Provider>()
-  const { account, chainId } = context
+    const context = useWeb3React<Web3Provider>();
+    const { account, chainId } = context;
 
-  const { logContractAddress, getDataFromSkyDB, onboardUser } = useDefaultSkyDB();
+    const { logContractAddress, getDataFromSkyDB, onboardUser } = useDefaultSkyDB();
 
-  const [contracts, setContracts] = useState<any[]>([]);
-  const [contractAddress, setContractAddress] = useState<string>('');
+    const [contracts, setContracts] = useState<any[]>([]);
+    const [contractAddress, setContractAddress] = useState<string>('');
 
-  const [uploadTokenLoading, setUploadTokenLoading] = useState<boolean>(false);
-  const [newContractAdded, setNewContractAdded] = useState<boolean>(false);
+    const [uploadTokenLoading, setUploadTokenLoading] = useState<boolean>(false);
+    const [newContractAdded, setNewContractAdded] = useState<boolean>(false);
 
-  useEffect(() => {
-    
-    const onboard = async (acc: string) => {
-      try {
-        await onboardUser(acc);
-      } catch(err) {
-        console.log(err);
-      }
-    }
-    
-    if(account) onboard(account);
-  }, [account])
+    useEffect(() => {
+        const onboard = async (acc: string) => {
+            try {
+                await onboardUser(acc);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-  useEffect(() => {
-    const getTxs = async () => {
-      const data = await getDataFromSkyDB();
-      if(data) {
-        if (data[account as string]) {
-          
-          if(data[account as string].NFTs) {
-            const addressesInContracts = contracts.map((contract: any) => contract.address);
-            const addressesToAdd = data[account as string].NFTs.filter((contract: any) => contract.chainId == chainId && !addressesInContracts.includes(contract.address))
-            setContracts([...addressesToAdd])
-          };
+        if (account) {
+            onboard(account);
         }
-      }
-    }
+    }, [account, onboardUser]);
 
-    if(account && chainId) {
-      getTxs()
-    } else {
-      setContracts([]);
-    }
-  }, [account, chainId])
+    useEffect(() => {
+        const getTxs = async () => {
+            const data = await getDataFromSkyDB();
+            if (data) {
+                if (data[account as string]) {
+                    if (data[account as string].NFTs) {
+                        const addressesInContracts = contracts.map(
+                            (contract: any) => contract.address,
+                        );
+                        const addressesToAdd = data[account as string].NFTs.filter(
+                            (contract: any) =>
+                                contract.chainId === chainId &&
+                                !addressesInContracts.includes(contract.address),
+                        );
+                        setContracts([...addressesToAdd]);
+                    }
+                }
+            }
+        };
 
-  const handleNewContract = async () => {
-    setNewContractAdded(true);
+        if (account && chainId) {
+            getTxs();
+        } else {
+            setContracts([]);
+        }
+    }, [account, chainId, contracts, getDataFromSkyDB]);
 
-    const wait = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('');
-      }, 5000)
-    })
+    const handleNewContract = async () => {
+        setNewContractAdded(true);
 
-    await wait;
-    setNewContractAdded(false);
-  }
+        const wait = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('');
+            }, 5000);
+        });
 
-  const logNewContract = async (acc: string, contractAddr: string) => {
-    setContracts([...contracts, {
-      address: contractAddr,
-      chainId: chainId
-    }])
+        await wait;
+        setNewContractAdded(false);
+    };
 
-    // console.log("Loggin new contract: ", contractAddr);
-    try {
-      await logContractAddress(acc, {
-        address: contractAddr,
-        chainId: chainId
-      })
-    } catch(err) {
-      console.log(err)
-    }
-  }
+    const logNewContract = async (acc: string, contractAddr: string) => {
+        setContracts([
+            ...contracts,
+            {
+                address: contractAddr,
+                chainId,
+            },
+        ]);
 
-  let sharedState = {
-    NFT, 
-    BidExecutor,
-    contracts,
-    setContracts,
-    logNewContract,
-    contractAddress,
-    setContractAddress,
-    uploadTokenLoading,
-    setUploadTokenLoading,
-    newContractAdded,
-    handleNewContract
-  };
+        // console.log("Loggin new contract: ", contractAddr);
+        try {
+            await logContractAddress(acc, {
+                address: contractAddr,
+                chainId,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
+    const sharedState = {
+        NFT,
+        BidExecutor,
+        contracts,
+        setContracts,
+        logNewContract,
+        contractAddress,
+        setContractAddress,
+        uploadTokenLoading,
+        setUploadTokenLoading,
+        newContractAdded,
+        handleNewContract,
+    };
 
-  return (
-    <ContractContext.Provider value={sharedState}>
-      {children}
-    </ContractContext.Provider>
-  );
+    return <ContractContext.Provider value={sharedState}>{children}</ContractContext.Provider>;
 }
+
+ContractWrapper.displayName = 'ContractWrapper';
+

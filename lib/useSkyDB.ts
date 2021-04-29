@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { genKeyPairFromSeed, SkynetClient } from "skynet-js";
+import { useEffect, useRef } from 'react';
+import { genKeyPairFromSeed, SkynetClient } from 'skynet-js';
 
 interface NFT {
   name: string,
