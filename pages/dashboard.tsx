@@ -5,7 +5,7 @@ import { Box, Button, Flex, HStack, Stack } from '@chakra-ui/react';
 import { LoggedInHeader } from '../components/LoggedInHeader';
 
 const DashboardMain: React.FC<any> = () => {
-    return <Box>Main</Box>;
+    return <Box>Your Collections:</Box>;
 };
 DashboardMain.displayName = 'DashboardMain';
 
