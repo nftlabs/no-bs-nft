@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import {
     Center,
@@ -24,9 +25,20 @@ const validateEmail = (emailToValidate: string) => {
 };
 
 const LoggedInLanding: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
+    const router = useRouter();
+
     return (
         <Stack>
             <Text>Logged In as: {user.email}</Text>
+            <Center>
+                <Button
+                    onClick={() => {
+                        router.push('/dashboard');
+                    }}
+                >
+                    Enter
+                </Button>
+            </Center>
         </Stack>
     );
 };
