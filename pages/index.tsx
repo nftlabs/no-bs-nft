@@ -18,6 +18,7 @@ import { ContentWrapper } from '../components/ContentWrapper';
 
 import useUser from '../lib/useUser';
 import { errorToast } from '../lib/toast';
+import { LoggedInHeader } from '../components/LoggedInHeader';
 
 const validateEmail = (emailToValidate: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -117,19 +118,7 @@ export default function App(): JSX.Element {
                 <Center mt="16">
                     <Stack maxW="800px">
                         <Stack as={Flex} mb={4} px={4}>
-                            {user ? (
-                                <HStack alignSelf="flex-end">
-                                    <Button
-                                        onClick={() => {
-                                            logout();
-                                        }}
-                                    >
-                                        Logout
-                                    </Button>
-                                </HStack>
-                            ) : (
-                                ''
-                            )}
+                            {user ? <LoggedInHeader /> : ''}
 
                             <Center>
                                 <Image width="120px" height="120px" src="/openape-logo.svg" />
