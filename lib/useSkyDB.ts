@@ -240,6 +240,8 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     updateUser,
     logTransaction,
     logContractAddress,
-    updateUserNFTs
+    updateUserNFTs,
+    getNFTsOfCollection,
+    getAllCollections
   };
 }
