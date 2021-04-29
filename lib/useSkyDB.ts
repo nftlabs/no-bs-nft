@@ -1,10 +1,16 @@
 import { useEffect, useRef } from "react";
 import { genKeyPairFromSeed, SkynetClient } from "skynet-js";
 
+interface NFT {
+  name: string,
+  description: string,
+  image: string
+}
+
 // Hook with default skyDB settings
 export function useDefaultSkyDB(): any {
   return useSkyDB(
-    "transactions and NFTs",
+    "Open Ape datastore",
     process.env.NEXT_PUBLIC_SKYDB_SEED || ""
   );
 }
@@ -102,8 +108,9 @@ export default function useSkyDB(dataKey: string, seed: string): any {
       const document = {
         ...data,
         [publicAddress]: {
+          username: '',
           transactions: [],
-          NFTs: []
+          NFTs: {}
         },
       };
 
@@ -112,6 +119,49 @@ export default function useSkyDB(dataKey: string, seed: string): any {
       // console.log("Error: that public address is already in the database");
     }
   };
+
+  const updateUserNFTs = async (publicAddress: string, contractAddress: string, NFT: NFT) =>  {
+    const data = await getDataFromSkyDB();
+    const document = {...data};
+
+    if(document && document[publicAddress]) {
+
+      if(document[publicAddress].NFTs[contractAddress]) {
+
+        document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+      } else {
+        document[publicAddress].NFTs[contractAddress] = {};
+        document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+      }
+    
+    } else {
+      document[publicAddress].NFTs[contractAddress] = {};
+      document[publicAddress].NFTs[contractAddress] = {};
+      document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+    }
+
+    await uploadToSkyDB(document);
+  }
+
+  const getNFTsOfCollection = async (publicAddress: string, contractAddress: string) => {
+    const data = await getDataFromSkyDB();
+    
+    if(data && data[publicAddress]) {
+      return data[publicAddress].NFTs[contractAddress];
+    } else {
+      return null;
+    } 
+  }
+
+  const getAllCollections = async (publicAddress: string) => {
+    const data = await getDataFromSkyDB();
+    
+    if(data && data[publicAddress]) {
+      return data[publicAddress].NFTs;
+    } else {
+      return null;
+    } 
+  }
 
   // Update a users fields in DB
   const updateUser = async (
@@ -161,9 +211,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
   // Add transaction log to DB
   const logContractAddress = async (publicAddress: string, contractAddress: any) => {
     const data = await getDataFromSkyDB();
-    // console.log("ZZZ data: ", data)
-    // console.log("PADRR: ", publicAddress)
-    // console.log("Logging contract")
+
     if (data != undefined && data[publicAddress] != undefined) {
       const field = data[publicAddress].NFTs;
       const logs = field && field.length ? field : [];
@@ -191,6 +239,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     onboardUser,
     updateUser,
     logTransaction,
-    logContractAddress
+    logContractAddress,
+    updateUserNFTs
   };
 }
