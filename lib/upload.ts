@@ -6,12 +6,6 @@ interface TransactionParams {
     gasPrice: string;
 }
 
-// / Returns the contract object connected with signer.
-export const getContractObject = (address: string, abi: any, signer: any) => {
-    const contract = new ethers.Contract(address, abi, signer);
-    return contract;
-};
-
 // / Uploads token to NFT contract. Waits for the upload transaction to be mined and confirmed.
 // / Returns the transaction receipt. Returns an empty string '' upon error.
 export const uploadAndWaitForConfirmation = async (

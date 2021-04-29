@@ -8,7 +8,7 @@ import { Web3ReactProvider } from "@web3-react/core";import React from "react";
 import { MetaData } from "components/MetaData";
 import { Web3EagerConnector } from "components/Web3EagerConnector";
 
-import { ContractWrapper } from "lib/AppContext";
+// import { ContractWrapper } from "lib/AppContext";
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider);
@@ -25,9 +25,9 @@ function App({Component, pageProps }: AppProps): JSX.Element {
       >  
         <ChakraProvider>   
           <Web3EagerConnector />
-          <ContractWrapper>          
+          {/* <ContractWrapper>           */}
             <Component {...pageProps} /> 
-          </ContractWrapper>
+          {/* </ContractWrapper> */}
 
         </ChakraProvider>           
       </Web3ReactProvider>
