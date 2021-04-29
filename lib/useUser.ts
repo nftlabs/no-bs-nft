@@ -43,6 +43,7 @@ export default function useUser(): UserHandler {
         if(isLoggedIn){
           try{
             const userMeta = await magicClient?.user.getMetadata();
+            console.log(userMeta);
             setUser(userMeta);
           }catch(err){
             console.error("failed to check magic user", err);

@@ -33,7 +33,7 @@ export const uploadAndWaitForConfirmation = async (
 
 		return tx
 	} catch(err) {
-		console.log(err);
+		console.error(err);
 		return ''
 	}
 }
@@ -56,14 +56,14 @@ export const uploadAndWaitForMine = async (
 
 		return tx
 	} catch(err) {
-		console.log(err);
+		console.error(err);
 		return ''
 	}
 }
 
 /// Uploads token to NFT contract. Waits for the upload transaction to be mined and confirmed.
 /// Returns the transaction nonce to use for the next transaction. Returns 0 upon error.
-export const uploadWithoutWait = async (
+export const uploadWithoutWait = (
 	contract: any, to: string, URI: string, txParams: TransactionParams
 ) => {
 
@@ -79,7 +79,7 @@ export const uploadWithoutWait = async (
 
 		return txNonce + 1
 	} catch(err) {
-		console.log(err);
+		console.error(err);
 		return 0
 	}
 }

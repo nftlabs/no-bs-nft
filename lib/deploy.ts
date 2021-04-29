@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { supportedIds } from './supportedIds';
 
 interface ContractObject {
   abi: any;
@@ -71,7 +72,7 @@ export const setNFTFactory = async (
   bidExecutorAddress: string, 
   bidExecutorAbi: any,
   nftAddress: string, 
-  signer: any
+  signer: any 
 ) => {
 
   try {
@@ -86,4 +87,63 @@ export const setNFTFactory = async (
   } catch(err) {
     console.log(err)
   }
+}
+
+export const deployNFTContract = async (
+  NftObject: ContractObject,
+  BidExecutorObject: ContractObject, 
+  signer: any,
+  name: string, 
+  symbol: string,
+  chainId: number
+) => {
+
+  let bidExecutorAddress: string;
+  let nftAddress: string;
+
+  try {
+    const {tx, address}: any = await deployBidExecutor(BidExecutorObject, signer);
+    await tx.wait()
+    bidExecutorAddress = address;
+
+      
+  } catch(err) {
+    console.error(err)
+  }
+
+  try {
+    const {tx, address}: any = await deployERC721(NftObject, name, symbol, bidExecutorAddress, signer);
+    await tx.wait()
+    nftAddress = address;
+
+  } catch(err) {
+    console.error(err);
+  }
+
+  try {
+    const { tx }: any = await setNFTFactory(bidExecutorAddress, BidExecutorObject.abi, nftAddress, signer);
+    await tx.wait();
+    
+  } catch(err) {
+    console.error(err)
+  }
+
+  if(!(chainId == 137 || chainId == 80001)) {
+    
+    await fetch("/api/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        network: supportedIds[(chainId as number).toString()].name.toLowerCase(),
+        nft_address: nftAddress,
+        bidExecutor_address: bidExecutorAddress, 
+        name: name,
+        symbol: symbol
+      })
+    })
+  }
+
+  return nftAddress;
 }
