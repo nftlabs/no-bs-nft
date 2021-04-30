@@ -133,12 +133,14 @@ export default function Dashboard(): JSX.Element {
                 </Container>
 
                 <Center>
-                    <Button
-                        px="16"
-                        className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-                    >
-                        Create a collection
-                    </Button>
+                    <Link href={`/${username}/untitled`}>
+                        <Button
+                            px="16"
+                            className="border-2 border-black bg-white shadow-md rounded-lg h-10"
+                        >
+                            Create a collection
+                        </Button>
+                    </Link>
                 </Center>
             </ContentWrapper>
         </>
