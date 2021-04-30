@@ -49,4 +49,3 @@ export const uploadMetadataToSkynet = async (metadata: NFTMetadata) => {
         return '';
     }
 };
-

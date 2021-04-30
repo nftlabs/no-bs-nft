@@ -155,4 +155,3 @@ export const deployNFTContract = async (
 
     return nftAddress;
 };
-
