@@ -11,8 +11,8 @@ module.exports = {
         'prettier/prettier': [
             'error',
             {
-                'endOfLine': 'auto'
-            }
+                endOfLine: 'auto',
+            },
         ],
         // typescript
         '@typescript-eslint/ban-ts-comment': [
@@ -44,7 +44,7 @@ module.exports = {
         'import/no-default-export': 'off',
         'import/no-useless-path-segments': 'error',
         // react
-        'react/display-name': ['warn', { ignoreTranspilerName: true }],
+        'react/display-name': ['warn', { ignoreTranspilerName: false }],
         'react/forbid-dom-props': ['error', { forbid: ['className', 'style'] }],
         'react/no-children-prop': 'off',
         'react/prop-types': 'off',

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { genKeyPairFromSeed, SkynetClient } from 'skynet-js';
 
-interface NFTData {
+interface NFT {
     name: string;
     description: string;
     image: string;
@@ -34,7 +34,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         try {
             await skyPortalRef.current.db.setJSON(skydbPrivateKey.current, dataKey, document);
 
-            // console.log('Uploading to SkyDB: ', document);
+            // console.log("Uploading to SkyDB: ", document);
         } catch (error) {
             console.log(error);
         }
@@ -42,15 +42,15 @@ export default function useSkyDB(dataKey: string, seed: string): any {
 
     // Function to get all data from skyDB as JSON (not exported)
     const getDataFromSkyDB = async () => {
-        // console.log('Calling getDataFromSkyDB')
+        // console.log("Calling getDataFromSkyDB")
         try {
             const { data, revision } = await skyPortalRef.current.db.getJSON(
                 skydbPublicKey.current,
                 dataKey,
             );
 
-            // console.log('Data from SkyDB: ', data);
-            // console.log('Revisions to SkyDB: ', revision);
+            // console.log("Data from SkyDB: ", data);
+            // console.log("Revisions to SkyDB: ", revision);
 
             return data;
         } catch (error) {
@@ -66,7 +66,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
             return data[publicAddress];
         } else {
             // console.log(
-            //     'Error: there is no user with that public address in the database'
+            //   "Error: there is no user with that public address in the database"
             // );
             return null;
         }
@@ -86,7 +86,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
                 publicAddress,
             };
         } else {
-            // console.log('Error: there is no user with that username in the database');
+            // console.log("Error: there is no user with that username in the database");
         }
     };
 
@@ -107,25 +107,25 @@ export default function useSkyDB(dataKey: string, seed: string): any {
 
             await uploadToSkyDB(document);
         } else {
-            // console.log('Error: that public address is already in the database');
+            // console.log("Error: that public address is already in the database");
         }
     };
 
-    const updateUserNFTs = async (publicAddress: string, contractAddress: string, NFT: NFTData) => {
+    const updateUserNFTs = async (publicAddress: string, contractAddress: string, nftObj: NFT) => {
         const data = await getDataFromSkyDB();
         const document = { ...data };
 
         if (document && document[publicAddress]) {
             if (document[publicAddress].NFTs[contractAddress]) {
-                document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+                document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
             } else {
                 document[publicAddress].NFTs[contractAddress] = {};
-                document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+                document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
             }
         } else {
             document[publicAddress].NFTs[contractAddress] = {};
             document[publicAddress].NFTs[contractAddress] = {};
-            document[publicAddress].NFTs[contractAddress][NFT.image] = NFT;
+            document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
         }
 
         await uploadToSkyDB(document);
@@ -165,7 +165,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
 
             await uploadToSkyDB(document);
         } else {
-            // console.log('Error: that public addess is not in the database');
+            // console.log("Error: that public addess is not in the database");
         }
     };
 
@@ -187,7 +187,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
 
             await uploadToSkyDB(document);
         } else {
-            // console.log('Error: that public address is not in the database');
+            // console.log("Error: that public address is not in the database");
         }
     };
 
@@ -207,11 +207,11 @@ export default function useSkyDB(dataKey: string, seed: string): any {
                 },
             };
 
-            // console.log('New document: ', document)
+            // console.log("New document: ", document)
 
             await uploadToSkyDB(document);
         } else {
-            // console.log('Error: that public address is not in the database');
+            // console.log("Error: that public address is not in the database");
         }
     };
 
