@@ -7,6 +7,8 @@ interface NFT {
     image: string;
 }
 
+// SkyDB document shape -- https://www.notion.so/fdotinc/OpenApe-ce6504e20ca14d38bdb1d879bc33830b#7ee0a3d6f8d54b479d644fd55d65fe16
+
 // Hook with default skyDB settings
 export function useDefaultSkyDB(): any {
     return useSkyDB('Open Ape datastore', process.env.NEXT_PUBLIC_SKYDB_SEED || '');
@@ -91,6 +93,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     };
 
     // Onboard a user to the database
+    // Visit the link at the top of the file for the SkyDB document shape.
     const onboardUser = async (publicAddress: string) => {
         const data = await getDataFromSkyDB();
 
@@ -101,7 +104,7 @@ export default function useSkyDB(dataKey: string, seed: string): any {
                 [publicAddress]: {
                     username: '',
                     transactions: [],
-                    NFTs: {},
+                    collections: {},
                 },
             };
 
@@ -111,35 +114,38 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         }
     };
 
+    // Visit the link at the top of the file for the SkyDB document shape.
     const updateUserNFTs = async (publicAddress: string, contractAddress: string, nftObj: NFT) => {
         const data = await getDataFromSkyDB();
-        const document = { ...data };
+        const document = data ? { ...data } : {};
 
-        if (document && document[publicAddress]) {
-            if (document[publicAddress].NFTs[contractAddress]) {
-                document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
+        if (document[publicAddress]) {
+            if (document[publicAddress].collections[contractAddress]) {
+                document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
             } else {
-                document[publicAddress].NFTs[contractAddress] = {};
-                document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
+                document[publicAddress].collections[contractAddress] = {};
+                document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
             }
         } else {
-            document[publicAddress].NFTs[contractAddress] = {};
-            document[publicAddress].NFTs[contractAddress] = {};
-            document[publicAddress].NFTs[contractAddress][nftObj.image] = nftObj;
+            document[publicAddress] = {};
+            document[publicAddress].collections[contractAddress] = {};
+            document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
         }
 
         await uploadToSkyDB(document);
     };
 
+    // Visit the link at the top of the file for the SkyDB document shape.
     const getNFTsOfCollection = async (publicAddress: string, contractAddress: string) => {
         const data = await getDataFromSkyDB();
         if (data && data[publicAddress]) {
-            return data[publicAddress].NFTs[contractAddress];
+            return data[publicAddress].collections[contractAddress];
         } else {
             return null;
         }
     };
 
+    // Visit the link at the top of the file for the SkyDB document shape.
     const getAllCollections = async (publicAddress: string) => {
         const data = await getDataFromSkyDB();
         if (data && data[publicAddress]) {

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { HamburgerIcon } from '@chakra-ui/icons';
 import {
@@ -17,6 +19,27 @@ import {
 } from '@chakra-ui/react';
 
 import { ContentWrapper } from '../components/ContentWrapper';
+
+import { useDefaultSkyDB } from '../lib/useSkyDB';
+import useUser from '../lib/useUser';
+
+/**
+ * `collections` is an array of objects of the following shape:
+ *      {
+ *         contractAddress: <string>
+ *         title: <string>,
+ *         symbol: <string>,
+ *
+ *         {
+ *              name: <string>,
+ *              description: <string>,
+ *              image: <string> (this is the `src` string for the image)
+ *         }
+ *      }
+ *
+ * Each object (collection) in the `collections` array contains the collection's address, title, symbol, and the tokens in it.
+ * The tokens are represented as objects containing the token name, description, and image URI.
+ */
 
 const CollectionRow = ({ collection }: any): JSX.Element => {
     const { collectionBanner, title, symbol, creatorUsername } = collection;
@@ -41,12 +64,22 @@ CollectionRow.displayName = 'CollectionRow';
 export default function Dashboard(): JSX.Element {
     const [collections, setCollections] = useState<any[]>([]);
 
-    const dummyCollection = {
-        collectionBanner: '/test-art.jpg',
-        title: 'COLORISMS',
-        symbol: 'COL',
-        creatorUsername: '@rin',
-    };
+    const { getAllCollections } = useDefaultSkyDB();
+    const { user } = useUser();
+
+    const router = useRouter();
+    const { username } = router.query;
+
+    useEffect(() => {
+        const getCollectionsfromDB = async () => {
+            const collectionsFromDB = await getAllCollections(user.publicAddress);
+            const collectionData = Object.keys(collectionsFromDB).map((key) => {
+                return { contractAddress: key, ...collectionsFromDB[key] };
+            });
+            setCollections([...collectionData]);
+        };
+        getCollectionsfromDB();
+    }, [user, getAllCollections]);
 
     return (
         <>
@@ -74,10 +107,12 @@ export default function Dashboard(): JSX.Element {
                                             {collections.length > 0 ? (
                                                 collections.map((col) => {
                                                     return (
-                                                        <CollectionRow
-                                                            collection={col}
+                                                        <Link
+                                                            href={`/${username}/${col.title}`}
                                                             key={col.title}
-                                                        />
+                                                        >
+                                                            <CollectionRow collection={col} />
+                                                        </Link>
                                                     );
                                                 })
                                             ) : (
