@@ -110,4 +110,3 @@ export function ContractWrapper({ NFT, BidExecutor, children }: any) {
 }
 
 ContractWrapper.displayName = 'ContractWrapper';
-

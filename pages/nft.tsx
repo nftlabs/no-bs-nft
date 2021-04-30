@@ -79,4 +79,3 @@ export default function NFT(): JSX.Element {
 }
 
 NFT.displayName = 'NFT';
-
