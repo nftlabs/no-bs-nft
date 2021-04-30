@@ -149,9 +149,47 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     const getAllCollections = async (publicAddress: string) => {
         const data = await getDataFromSkyDB();
         if (data && data[publicAddress]) {
-            return data[publicAddress].NFTs;
+            return data[publicAddress].collections;
         } else {
             return null;
+        }
+    };
+
+    // const getUserByUsername = async (username: string) => {
+    //     const data = await getDataFromSkyDB();
+
+    //     // Get all addresses with given username
+    //     const publicAddresses = Object.keys(data).filter((key) => data[key].username === username);
+
+    //     if (publicAddresses.length) {
+    //         const publicAddress = publicAddresses[0];
+    //         // Return user data and public address
+    //         return {
+    //             ...data[publicAddress],
+    //             publicAddress,
+    //         };
+    //     } else {
+    //         // console.log("Error: there is no user with that username in the database");
+    //     }
+    // };
+
+    const getCollectionByCollectionTitle = async (
+        publicAddress: string,
+        collectionTitle: string,
+    ) => {
+        const data = await getDataFromSkyDB();
+        const document = data;
+
+        const collectionsOfUser = await getAllCollections(publicAddress);
+        const targetCollectionAddress = Object.keys(collectionsOfUser).filter((contractAddress) => {
+            return collectionsOfUser[contractAddress].title === collectionTitle;
+        });
+
+        if (targetCollectionAddress.length) {
+            const collectionAddress = targetCollectionAddress[0];
+            return document[publicAddress].collections[collectionAddress];
+        } else {
+            console.error(`The user has no collection titled ${collectionTitle}`);
         }
     };
 
@@ -232,5 +270,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         updateUserNFTs,
         getNFTsOfCollection,
         getAllCollections,
+        getCollectionByCollectionTitle,
     };
 }

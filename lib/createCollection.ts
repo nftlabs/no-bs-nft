@@ -1,4 +1,4 @@
-import ethers from 'ethers';
+import { ethers } from 'ethers';
 
 import { deployNFTContract } from './deploy';
 import { uploadWithoutWait, uploadAndWaitForMine } from './upload';
@@ -9,14 +9,14 @@ interface ContractObject {
 }
 
 interface NFT {
-    URI: string;
+    metadataLink: string;
     amount: number;
 }
 
 interface TransactionParams {
     gasLimit: number;
     txNonce: number;
-    gasPrice: string;
+    gasPrice: ethers.BigNumber;
 }
 
 /**
@@ -67,13 +67,18 @@ export default async function createCollection(
     let finalTx;
 
     for (let i = 0; i < NFTs.length; i++) {
-        const { URI, amount } = NFTs[i];
+        const { metadataLink, amount } = NFTs[i];
 
         for (let j = 1; j <= amount; j++) {
-            txNonce_magic = uploadWithoutWait(contract, userPublicAddress, URI, txParams);
+            txNonce_magic = uploadWithoutWait(contract, userPublicAddress, metadataLink, txParams);
 
             if (i === NFTs.length - 1 && j === amount) {
-                finalTx = await uploadAndWaitForMine(contract, userPublicAddress, URI, txParams);
+                finalTx = await uploadAndWaitForMine(
+                    contract,
+                    userPublicAddress,
+                    metadataLink,
+                    txParams,
+                );
 
                 fetch('/api/magicUpload', {
                     method: 'POST',

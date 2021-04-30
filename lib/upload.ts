@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 interface TransactionParams {
     gasLimit: number;
     txNonce: number;
-    gasPrice: string;
+    gasPrice: ethers.BigNumber;
 }
 
 // / Uploads token to NFT contract. Waits for the upload transaction to be mined and confirmed.
@@ -21,7 +21,7 @@ export const uploadAndWaitForConfirmation = async (
         const tx = await contract.mint(to, URI, {
             gasLimit,
             nonce: txNonce,
-            gasPrice: ethers.utils.parseUnits(gasPrice, 'gwei'),
+            gasPrice,
         });
 
         // Wait for the transaction to be confirmed
@@ -49,7 +49,7 @@ export const uploadAndWaitForMine = async (
         const tx = await contract.mint(to, URI, {
             gasLimit,
             nonce: txNonce,
-            gasPrice: ethers.utils.parseUnits(gasPrice, 'gwei'),
+            gasPrice,
         });
 
         return tx;
@@ -74,7 +74,7 @@ export const uploadWithoutWait = (
         contract.mint(to, URI, {
             gasLimit,
             nonce: txNonce,
-            gasPrice: ethers.utils.parseUnits(gasPrice, 'gwei'),
+            gasPrice,
         });
 
         return txNonce + 1;

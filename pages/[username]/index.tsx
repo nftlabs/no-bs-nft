@@ -18,10 +18,10 @@ import {
     Container,
 } from '@chakra-ui/react';
 
-import { ContentWrapper } from '../components/ContentWrapper';
+import { ContentWrapper } from '../../components/ContentWrapper';
 
-import { useDefaultSkyDB } from '../lib/useSkyDB';
-import useUser from '../lib/useUser';
+import { useDefaultSkyDB } from '../../lib/useSkyDB';
+import useUser from '../../lib/useUser';
 
 /**
  * `collections` is an array of objects of the following shape:
