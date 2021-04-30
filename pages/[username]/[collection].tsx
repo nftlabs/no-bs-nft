@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { GetStaticProps } from 'next';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
@@ -9,21 +8,10 @@ import { useRouter } from 'next/router';
 import useUser from '../../lib/useUser';
 import useGasPrice from '../../lib/useGasPrice';
 import { useDefaultSkyDB } from '../../lib/useSkyDB';
-import { compileERC721 } from '../../lib/compile';
 import createCollection from '../../lib/createCollection';
 import { ContentWrapper } from '../../components/ContentWrapper';
 import { Button } from '@chakra-ui/button';
-
-export const getStaticProps: GetStaticProps = async (context) => {
-    const { NFT, BidExecutor } = await compileERC721();
-
-    return {
-        props: {
-            NFT,
-            BidExecutor,
-        },
-    };
-};
+import { ContractContext } from '../../lib/ContractContext';
 
 interface NFTData {
     name: string;
@@ -39,7 +27,9 @@ interface TransactionParams {
     gasPrice: ethers.BigNumber;
 }
 
-export default function Collection({ NFT, BidExecutor }): JSX.Element {
+export default function Collection(): JSX.Element {
+    const [NFT, BidExecutor] = useContext(ContractContext);
+
     const [name, setName] = useState<string>('');
     const [symbol, setSymbol] = useState<string>('');
     const [NFTs, setNFTs] = useState<NFTData[]>([]);

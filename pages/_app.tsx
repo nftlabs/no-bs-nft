@@ -7,8 +7,7 @@ import { Web3Provider } from '@ethersproject/providers';
 import { Web3ReactProvider } from '@web3-react/core';
 import { MetaData } from '../components/MetaData';
 import { Web3EagerConnector } from '../components/Web3EagerConnector';
-
-// import { ContractWrapper } from 'lib/AppContext';
+import { ContractContext } from '../lib/ContractContext';
 
 function getLibrary(provider: any): Web3Provider {
     const library = new Web3Provider(provider);
@@ -16,15 +15,16 @@ function getLibrary(provider: any): Web3Provider {
 }
 
 function App({ Component, pageProps }: AppProps): JSX.Element {
+    const { NFT, BidExecutor } = pageProps;
     return (
         <>
             <MetaData />
             <Web3ReactProvider getLibrary={getLibrary}>
                 <ChakraProvider>
                     <Web3EagerConnector />
-                    {/* <ContractWrapper>*/}
-                    <Component {...pageProps} />
-                    {/* </ContractWrapper> */}
+                    <ContractContext.Provider value={[NFT, BidExecutor]}>
+                        <Component {...pageProps} />
+                    </ContractContext.Provider>
                 </ChakraProvider>
             </Web3ReactProvider>
         </>
