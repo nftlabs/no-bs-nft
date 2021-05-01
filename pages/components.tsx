@@ -28,6 +28,24 @@ export default function Components() {
 
       <Flex direction="column" marginX="40px">
         <Text variant="heading" mb="8px">
+          Color Palette
+        </Text>
+        <Flex >
+          <Pane color="gradient" />
+          <Pane color="primary" />
+          <Pane color="violet" />
+        </Flex>
+        <Flex>
+          <Pane color="gray.darkest" />
+          <Pane color="gray.dark" />
+          <Pane color="gray.medium" />
+          <Pane color="gray.light" />
+          <Pane color="gray.lightest" />
+        </Flex>
+      </Flex>
+
+      <Flex direction="column" marginX="40px">
+        <Text variant="heading" mb="8px">
           Buttons
         </Text>
         <Flex>
@@ -101,6 +119,25 @@ export default function Components() {
         </Text>
       </Flex>
 
+    </Flex>
+  )
+}
+
+function Pane({ color }) {
+  return (
+    <Flex direction="column" mr="8px" mb="8px">
+      <Text
+        fontSize="12px"
+        color="#666"
+      >
+        {color}
+      </Text>
+      <Flex 
+        height="80px" 
+        width="80px" 
+        borderRadius="4px"
+        bg={color}
+      />
     </Flex>
   )
 }
