@@ -10,25 +10,25 @@ import { Web3EagerConnector } from '../components/Web3EagerConnector';
 import { ContractContext } from '../lib/ContractContext';
 
 function getLibrary(provider: any): Web3Provider {
-    const library = new Web3Provider(provider);
-    return library;
+  const library = new Web3Provider(provider);
+  return library;
 }
 
 function App({ Component, pageProps }: AppProps): JSX.Element {
-    const { NFT, BidExecutor } = pageProps;
-    return (
-        <>
-            <MetaData />
-            <Web3ReactProvider getLibrary={getLibrary}>
-                <ChakraProvider>
-                    <Web3EagerConnector />
-                    <ContractContext.Provider value={[NFT, BidExecutor]}>
-                        <Component {...pageProps} />
-                    </ContractContext.Provider>
-                </ChakraProvider>
-            </Web3ReactProvider>
-        </>
-    );
+  const { NFT, BidExecutor } = pageProps;
+  return (
+    <>
+      <MetaData />
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ChakraProvider>
+          <Web3EagerConnector />
+          <ContractContext.Provider value={[NFT, BidExecutor]}>
+            <Component {...pageProps} />
+          </ContractContext.Provider>
+        </ChakraProvider>
+      </Web3ReactProvider>
+    </>
+  );
 }
 
 export default App;
