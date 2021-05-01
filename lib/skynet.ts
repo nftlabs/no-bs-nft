@@ -4,6 +4,7 @@ interface NFTMetadata {
     name: string;
     description: string;
     image: string;
+    metadataLink?: string;
 }
 
 // / Uploads media file (image, video, pdf etc.) to skynet

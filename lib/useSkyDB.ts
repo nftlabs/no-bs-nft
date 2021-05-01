@@ -1,10 +1,24 @@
 import { useEffect, useRef } from 'react';
+import ethereum_address from 'ethereum-address';
 import { genKeyPairFromSeed, SkynetClient } from 'skynet-js';
 
-interface NFT {
+interface NFTMetadata {
     name: string;
     description: string;
     image: string;
+    metadataLink: string;
+}
+
+interface NFTData {
+    metadata: NFTMetadata;
+    amount: number;
+}
+
+interface NFTDraft {
+    name: string;
+    description: string;
+    image: string;
+    amount: number;
 }
 
 // SkyDB document shape -- https://www.notion.so/fdotinc/OpenApe-ce6504e20ca14d38bdb1d879bc33830b#7ee0a3d6f8d54b479d644fd55d65fe16
@@ -104,7 +118,11 @@ export default function useSkyDB(dataKey: string, seed: string): any {
                 [publicAddress]: {
                     username: '',
                     transactions: [],
-                    collections: {},
+
+                    collections: {
+                        drafts: {},
+                        deployed: {},
+                    },
                 },
             };
 
@@ -114,35 +132,160 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         }
     };
 
-    // Visit the link at the top of the file for the SkyDB document shape.
-    const updateUserNFTs = async (publicAddress: string, contractAddress: string, nftObj: NFT) => {
+    const saveCollectionDraft = async (
+        publicAddress: string,
+        title: string,
+        symbol: string,
+        nftObjects: NFTDraft[],
+    ) => {
         const data = await getDataFromSkyDB();
         const document = data ? { ...data } : {};
 
-        if (document[publicAddress]) {
-            if (document[publicAddress].collections[contractAddress]) {
-                document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
+        if (!document[publicAddress]) {
+            await onboardUser(publicAddress);
+        }
+
+        let draftToUpload = {
+            title,
+            symbol,
+            NFTs: nftObjects,
+        };
+
+        if (Object.keys(document[publicAddress].collections.drafts).includes(title)) {
+            const nftsInDrafts = document[publicAddress].collections.drafts[title].NFTs;
+
+            draftToUpload = { ...draftToUpload, NFTs: [...nftsInDrafts, ...draftToUpload.NFTs] };
+        }
+
+        document[publicAddress].collections.drafts[title] = draftToUpload;
+        await uploadToSkyDB(document);
+    };
+
+    const getAddressByCollectionTitle = async (publicAddress: string, collectionTitle: string) => {
+        const data = await getDataFromSkyDB();
+        const document = data;
+
+        const deployedCollections = document[publicAddress].collections.deployed;
+        const collectionAddresses = Object.keys(deployedCollections);
+
+        const targetCollectionAddress = collectionAddresses.filter((contractAddress) => {
+            return deployedCollections[contractAddress].title === collectionTitle;
+        });
+
+        if (targetCollectionAddress.length) {
+            const address = targetCollectionAddress[0];
+            return address;
+        } else {
+            console.error(`The user has no collection titled ${collectionTitle}`);
+            return '';
+        }
+    };
+
+    // Visit the link at the top of the file for the SkyDB document shape.
+    const getDeployedCollection = async (publicAddress: string, collectionTitle: string) => {
+        const data = await getDataFromSkyDB();
+        const contractAddress = await getAddressByCollectionTitle(publicAddress, collectionTitle);
+
+        if (!contractAddress) {
+            console.error(`There is no collection in the db titled ${collectionTitle}`);
+            return null;
+        }
+
+        if (data && data[publicAddress]) {
+            return data[publicAddress].collections.deployed[contractAddress];
+        } else {
+            return null;
+        }
+    };
+
+    // Visit the link at the top of the file for the SkyDB document shape.
+    const getDraftCollection = async (publicAddress: string, collectionTitle: string) => {
+        const data = await getDataFromSkyDB();
+
+        if (data && data[publicAddress]) {
+            const isDraft = Object.keys(data[publicAddress].collections.drafts).includes(
+                collectionTitle,
+            );
+
+            if (isDraft) {
+                return data[publicAddress].collections.deployed[collectionTitle];
             } else {
-                document[publicAddress].collections[contractAddress] = {};
-                document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
+                console.error(`There is no collection in the db titled ${collectionTitle}`);
+                return null;
             }
         } else {
-            document[publicAddress] = {};
-            document[publicAddress].collections[contractAddress] = {};
-            document[publicAddress].collections[contractAddress][nftObj.image] = nftObj;
+            return null;
+        }
+    };
+
+    const updateUserNFTDrafts = async (
+        publicAddress: string,
+        collectionIdentifier: string,
+        nftObjects: NFTData[],
+    ) => {
+        const data = await getDataFromSkyDB();
+        const document = data ? { ...data } : {};
+        let drafts = {};
+
+        if (!document[publicAddress]) {
+            document[publicAddress] = { collections: {} };
+        }
+
+        if (ethereum_address.isAddress(collectionIdentifier)) {
+            const contractAddress = collectionIdentifier;
+
+            if (!document[publicAddress].collections[contractAddress]) {
+                document[publicAddress].collections[contractAddress] = {};
+            }
+
+            if (!document[publicAddress].collections[contractAddress].drafts) {
+                document[publicAddress].collections[contractAddress].drafts = {};
+            } else {
+                drafts = { ...document[publicAddress].collections[contractAddress].drafts };
+            }
+
+            nftObjects.forEach((nftObj) => {
+                const nftIdentifier: string = nftObj.metadata.image;
+                document[publicAddress].collections[contractAddress].drafts[nftIdentifier] = nftObj;
+            });
+        } else {
+            const collectionName = collectionIdentifier;
+
+            if (!document[publicAddress].collections.drafts[collectionName]) {
+                document[publicAddress].collections.drafts[collectionName] = {};
+            }
+
+            nftObjects.forEach((nftObj) => {
+                const nftIdentifier: string = nftObj.metadata.image;
+                document[publicAddress].collections.drafts[collectionName][nftIdentifier] = nftObj;
+            });
         }
 
         await uploadToSkyDB(document);
     };
 
     // Visit the link at the top of the file for the SkyDB document shape.
-    const getNFTsOfCollection = async (publicAddress: string, contractAddress: string) => {
+    const updateUserNFTs = async (
+        publicAddress: string,
+        contractAddress: string,
+        nftObjects: NFTData[],
+    ) => {
         const data = await getDataFromSkyDB();
-        if (data && data[publicAddress]) {
-            return data[publicAddress].collections[contractAddress];
-        } else {
-            return null;
+        const document = data ? { ...data } : {};
+
+        if (!document[publicAddress]) {
+            document[publicAddress] = { collections: {} };
         }
+        if (!document[publicAddress].collections[contractAddress]) {
+            document[publicAddress].collections[contractAddress] = {};
+        }
+
+        nftObjects.forEach((nftObj) => {
+            const nftIdentifier: string = nftObj.metadata.image;
+            document[publicAddress].collections[contractAddress][nftIdentifier] = nftObj;
+        });
+
+        await uploadToSkyDB(document);
     };
 
     // Visit the link at the top of the file for the SkyDB document shape.
@@ -152,44 +295,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
             return data[publicAddress].collections;
         } else {
             return null;
-        }
-    };
-
-    // const getUserByUsername = async (username: string) => {
-    //     const data = await getDataFromSkyDB();
-
-    //     // Get all addresses with given username
-    //     const publicAddresses = Object.keys(data).filter((key) => data[key].username === username);
-
-    //     if (publicAddresses.length) {
-    //         const publicAddress = publicAddresses[0];
-    //         // Return user data and public address
-    //         return {
-    //             ...data[publicAddress],
-    //             publicAddress,
-    //         };
-    //     } else {
-    //         // console.log("Error: there is no user with that username in the database");
-    //     }
-    // };
-
-    const getCollectionByCollectionTitle = async (
-        publicAddress: string,
-        collectionTitle: string,
-    ) => {
-        const data = await getDataFromSkyDB();
-        const document = data;
-
-        const collectionsOfUser = await getAllCollections(publicAddress);
-        const targetCollectionAddress = Object.keys(collectionsOfUser).filter((contractAddress) => {
-            return collectionsOfUser[contractAddress].title === collectionTitle;
-        });
-
-        if (targetCollectionAddress.length) {
-            const collectionAddress = targetCollectionAddress[0];
-            return document[publicAddress].collections[collectionAddress];
-        } else {
-            console.error(`The user has no collection titled ${collectionTitle}`);
         }
     };
 
@@ -268,8 +373,10 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         logTransaction,
         logContractAddress,
         updateUserNFTs,
-        getNFTsOfCollection,
         getAllCollections,
-        getCollectionByCollectionTitle,
+        updateUserNFTDrafts,
+        saveCollectionDraft,
+        getDeployedCollection,
+        getDraftCollection,
     };
 }

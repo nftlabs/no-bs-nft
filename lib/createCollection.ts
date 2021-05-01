@@ -96,4 +96,6 @@ export default async function createCollection(
             }
         }
     }
+
+    return contractAddress;
 }
