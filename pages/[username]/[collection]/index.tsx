@@ -5,13 +5,13 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 
 import { useRouter } from 'next/router';
-import useUser from '../../lib/useUser';
-import useGasPrice from '../../lib/useGasPrice';
-import { useDefaultSkyDB } from '../../lib/useSkyDB';
-import createCollection from '../../lib/createCollection';
-import { ContentWrapper } from '../../components/ContentWrapper';
+import useUser from '../../../lib/useUser';
+import useGasPrice from '../../../lib/useGasPrice';
+import { useDefaultSkyDB } from '../../../lib/useSkyDB';
+import createCollection from '../../../lib/createCollection';
+import { ContentWrapper } from '../../../components/ContentWrapper';
 import { Button } from '@chakra-ui/button';
-import { ContractContext } from '../../lib/ContractContext';
+import { ContractContext } from '../../../lib/ContractContext';
 
 interface NFTData {
     name: string;
