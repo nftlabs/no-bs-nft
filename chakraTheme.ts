@@ -1,7 +1,9 @@
 import { extendTheme } from "@chakra-ui/react";
 
+const gradient = "linear-gradient(90deg, #B66EFF, #6D00DB)";
+
 const colors = {
-  gradient: "linear-gradient(90deg, #B66EFF, #6D00DB)",
+  gradient: gradient,
   primary: "#6D00DB",
   violet: "#B66EFF",
   gray: {
@@ -69,56 +71,85 @@ const Button = {
     size: "small",
     variant: "gradient"
   }
+};
+
+const Text = {
+  variants: {
+    default: {
+      fontSize: "16px",
+      color: "gray.medium",
+      fontWeight: "300"
+    },
+    primary: {
+      fontSize: "16px",
+      color: "black",
+      fontWeight: "300"
+    },
+    label: {
+      fontSize: "12px",
+      color: "black",
+      fontWeight: "900"
+    },
+    subheading: {
+      fontSize: "20px",
+      color: "black",
+      fontWeight: "900"
+    },
+    heading: {
+      fontSize: "32px",
+      color: "black",
+      fontWieght: "900"
+    },
+    gradient: {
+      bgGradient: gradient,
+      bgClip: "text",
+    },
+  },
+  defaultProps: {
+    variant: "default"
+  }
+};
+
+const Heading = {
+  baseStyle: {
+    fontSize: "60px",
+    fontWeight: "900",
+  }
+};
+
+const Input = {
+  baseStyle: {
+    field: {
+      fontSize: "16px",
+      fontWeight: "400",
+      boxShadow: "none !important",
+      padding: "8px !important",
+    }
+  }
+};
+
+const Textarea = {
+  baseStyle: {
+    fontSize: "16px",
+    fontWeight: "400",
+    boxShadow: "none !important",
+    padding: "8px !important",
+  }
+};
+
+const Link = {
+  baseStyle: {
+    boxShadow: "none !important",
+  }
 }
 
 const components = {
   Button,
-  Text: {
-    variants: {
-      label: {
-        fontSize: "20px",
-        fontWeight: "bold",
-      },
-      info: {
-        fontSize: "14px",
-        color: "#999",
-      },
-      gradient: {
-        bgGradient: "linear-gradient(90deg, #F6BE00, #FE01B3)",
-        bgClip: "text",
-      },
-    },
-  },
-  Heading: {
-    baseStyle: {
-      fontSize: "40px",
-      fontWeight: "bold",
-      letterSpacing: "-0.05em",
-    },
-  },
-  Input: {
-    baseStyle: {
-      field: {
-        fontSize: "16px",
-        fontWeight: "bold",
-        boxShadow: "none !important",
-        padding: "8px !important",
-      },
-    },
-  },
-  Textarea: {
-    baseStyle: {
-      fontSize: "16px",
-      fontWeight: "bold",
-      boxShadow: "none !important",
-      padding: "8px !important",
-    },
-  },
-  Link: {
-    baseStyle: {
-      boxShadow: "none !important",
-    },
-  },
+  Text,
+  Heading,
+  Input,
+  Textarea,
+  Link
 };
 
 const theme = extendTheme({ colors, fonts, components });
