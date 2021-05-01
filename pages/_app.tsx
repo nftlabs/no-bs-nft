@@ -2,6 +2,7 @@ import 'tailwindcss/tailwind.css';
 import React from 'react';
 import { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
+import Fonts from '../lib/Fonts';
 import theme from '../chakraTheme';
 
 import { Web3Provider } from '@ethersproject/providers';
@@ -22,6 +23,7 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
       <MetaData />
       <Web3ReactProvider getLibrary={getLibrary}>
         <ChakraProvider theme={theme}>
+          <Fonts />
           <Web3EagerConnector />
           <ContractContext.Provider value={[NFT, BidExecutor]}>
             <Component {...pageProps} />

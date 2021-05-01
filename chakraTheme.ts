@@ -24,6 +24,7 @@ const Button = {
   baseStyle: {
     borderRadius: "4px",
     boxShadow: "none !important",
+    outline: "none !important",
     _hover: {
       opacity: 0.9,
     },
@@ -53,24 +54,31 @@ const Button = {
       color: "primary",
       borderWidth: "1px",
       borderStyle: "solid",
-      borderColor: "gray.lightest"
+      borderColor: "gray.lightest",
+      _hover: {
+        borderColor: "primary",
+      }
     },
-    plain: {
+    normal: {
       bg: "white",
-      color: "gray.darkest",
+      color: "gray.medium",
       borderWidth: "1px",
       borderStyle: "solid",
-      borderColor: "gray.lightest"
+      borderColor: "gray.lightest",
+      _hover: {
+        color: "black",
+        borderColor: "black"
+      }
     },
     dark: {
       bg: "gray.darkest",
       color: "white"
     }
   },
-  defaultProps: {
-    size: "small",
-    variant: "gradient"
-  }
+  // defaultProps: {
+  //   size: "small",
+  //   variant: "gradient"
+  // }
 };
 
 const Text = {
@@ -98,16 +106,16 @@ const Text = {
     heading: {
       fontSize: "32px",
       color: "black",
-      fontWieght: "900"
+      fontWeight: "900"
     },
     gradient: {
       bgGradient: gradient,
       bgClip: "text",
     },
   },
-  defaultProps: {
-    variant: "default"
-  }
+  // defaultProps: {
+  //   variant: "default"
+  // }
 };
 
 const Heading = {
