@@ -133,10 +133,11 @@ const Heading = {
 const Input = {
   baseStyle: {
     field: {
+      width: "300px",
       fontSize: "16px",
       fontWeight: "400",
+      padding: "12px !important",
       boxShadow: "none !important",
-      padding: "8px !important",
     }
   }
 };

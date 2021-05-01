@@ -1,4 +1,4 @@
-import { Flex, Button, Heading, Text } from "@chakra-ui/react";
+import { Flex, Button, Heading, Text, Input } from "@chakra-ui/react";
 
 export default function Components() {
   return (
@@ -8,7 +8,7 @@ export default function Components() {
       height="100vh"
       flexWrap="wrap"
     >
-      <Flex direction="column" mr="40px">
+      <Flex direction="column" marginX="40px">
         <Heading>
           Large Heading
         </Heading>
@@ -117,6 +117,45 @@ export default function Components() {
         <Text variant="heading" mb="8px">
           Inputs
         </Text>
+        <Flex direction="column">
+          <Flex direction="column" mb="8px">
+            <Text variant="label">
+              Username
+            </Text>
+            <Input 
+              placeholder="Input with label" 
+              focusBorderColor="primary"
+            />
+          </Flex>
+          
+          <Input 
+            placeholder="Enter input here" 
+            focusBorderColor="primary"
+            mb="8px" 
+          />
+          
+          <Input 
+            value="Here is an input" 
+            focusBorderColor="primary"
+            mb="8px"
+          />
+
+          <Flex>
+            <Input 
+              placeholder="Input with button" 
+              focusBorderColor="primary"
+              borderRadius="4px 0px 0px 4px"
+            />
+            <Button 
+              size="small" 
+              variant="gradient"
+              borderRadius="0px 4px 4px 0px"
+              width="100px"
+            >
+              Submit
+            </Button>
+          </Flex>
+        </Flex>
       </Flex>
 
     </Flex>
