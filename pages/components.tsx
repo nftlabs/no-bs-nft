@@ -1,4 +1,4 @@
-import { Flex, Button, Heading, Text, Input } from "@chakra-ui/react";
+import { Flex, Button, Heading, Text, Input, Image } from "@chakra-ui/react";
 
 export default function Components() {
   return (
@@ -158,6 +158,47 @@ export default function Components() {
         </Flex>
       </Flex>
 
+      <Flex direction="column" marginX="40px">
+        <Text variant="heading" mb="8px">
+          Cards
+        </Text>
+        <Flex 
+          variant="card"
+          height="200px"
+          width="500px"
+          borderRadius="8px"
+          padding="20px"
+          direction="column"
+          position="relative"
+          boxShadow="0px 8px 20px rgba(0, 0, 0, 0.1)"
+        >
+          <Image 
+            position="absolute"
+            top="20px"
+            right="20px"
+            width="100px"
+            height="100px"
+            borderRadius="4px"
+            src="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2018/01/beeple.jpg"
+          />
+
+          <Text variant="subheading">
+            Example title
+          </Text>
+          <Text variant="default" mt="4px" width="300px">
+            This is an example card description. You can use it to describe the card.
+          </Text>
+
+          <Button
+            position="absolute"
+            variant="gradient"
+            size="small"
+            bottom="20px"
+          >
+            Do something
+          </Button>
+        </Flex>
+      </Flex>
     </Flex>
   )
 }
