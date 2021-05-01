@@ -119,9 +119,14 @@ const Text = {
 };
 
 const Heading = {
-  baseStyle: {
-    fontSize: "60px",
-    fontWeight: "900",
+  variants: {
+    large: {
+      fontSize: "60px !important",
+      fontWeight: "900"
+    }
+  },
+  defaultProps: {
+    variant: "large"
   }
 };
 
