@@ -15,7 +15,7 @@ contract OpenApeRegistry {
     event NativeRegistration(address _deployer, address _contract);
     event ExternalRegistration(address _deployer, address _contract);
 
-    function nativeRegister(address _deployer, address _contract) external {
+    function nativeRegister(address _deployer, address _contract) internal {
         Registry.registeredAddress[Registry.count] = _contract;
         Registry.count += 1;
 
@@ -32,4 +32,18 @@ contract OpenApeRegistry {
 
         emit ExternalRegistration(_deployer, _contract);
     }
+
+    function deployNFT(bytes memory code, uint256 salt) public {
+        address addr;
+        assembly {
+            addr := create2(0, add(code, 0x20), mload(code), salt)
+            
+            if iszero(extcodesize(addr)) {
+                revert(0, 0)
+            }
+        }
+
+        nativeRegister(msg.sender, addr);  
+    }
+
 }
