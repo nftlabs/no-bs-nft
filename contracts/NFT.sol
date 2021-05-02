@@ -59,6 +59,19 @@ contract NFT is ERC721PresetMinterPauserAutoId {
         URI[tokenId] = _URI;
     }
 
+    /// @notice Let's address with MINTER_ROLE mint more than one token for the same URI.
+    function mintBatch(address _to, string calldata _URI, uint _amount) public {
+        if(!isApprovedForAll(msg.sender, bidExecutor)) {
+            setApprovalForAll(bidExecutor, true);
+        }
+
+        for (uint i = 0; i < _amount; i++) {
+            uint tokenId = mint(_to);
+            totalTokensMinted = tokenId;
+            URI[tokenId] = _URI;
+        }
+    }
+
     function setThreshold(uint _tokenId, uint _value, bool _active) external {
         require(_exists(_tokenId), "ERC721: token has not been minted.");
         require(msg.sender == ownerOf(_tokenId), "Only the token owner can accept the bid.");
