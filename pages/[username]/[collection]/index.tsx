@@ -64,9 +64,6 @@ function CreateNFTView({ draft, saveNFT, collectionTitle }: CreateNFTViewProps):
     const [amount, setAmount] = useState<number>(1);
     const [file, setFile] = useState<File | null>(null);
 
-    const { user } = useUser();
-    const { updateUserNFTDrafts } = useDefaultSkyDB();
-
     // If the collection is a draft (i.e. the collection / NFT contract has not been deployed)
     const handleNFTDraft = async () => {
         // state variable `file: File[]` uploaded by user
@@ -87,7 +84,6 @@ function CreateNFTView({ draft, saveNFT, collectionTitle }: CreateNFTViewProps):
         };
 
         saveNFT(nftToSave);
-        await updateUserNFTDrafts(user.publicAddress, collectionTitle, [nftToSave]);
     };
 
     // If the collection is not a draft (i.e. the collection / NFT contract has been deployed)

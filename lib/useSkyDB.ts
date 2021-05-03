@@ -265,30 +265,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     };
 
     // Visit the link at the top of the file for the SkyDB document shape.
-    const updateUserNFTs = async (
-        publicAddress: string,
-        contractAddress: string,
-        nftObjects: NFTData[],
-    ) => {
-        const data = await getDataFromSkyDB();
-        const document = data ? { ...data } : {};
-
-        if (!document[publicAddress]) {
-            document[publicAddress] = { collections: {} };
-        }
-        if (!document[publicAddress].collections[contractAddress]) {
-            document[publicAddress].collections[contractAddress] = {};
-        }
-
-        nftObjects.forEach((nftObj) => {
-            const nftIdentifier: string = nftObj.metadata.image;
-            document[publicAddress].collections[contractAddress][nftIdentifier] = nftObj;
-        });
-
-        await uploadToSkyDB(document);
-    };
-
-    // Visit the link at the top of the file for the SkyDB document shape.
     const getAllCollections = async (publicAddress: string) => {
         const data = await getDataFromSkyDB();
         if (data && data[publicAddress]) {
@@ -340,30 +316,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         }
     };
 
-    // Add transaction log to DB
-    const logContractAddress = async (publicAddress: string, contractAddress: any) => {
-        const data = await getDataFromSkyDB();
-
-        if (data !== undefined && data[publicAddress] !== undefined) {
-            const field = data[publicAddress].NFTs;
-            const logs = field && field.length ? field : [];
-
-            const document = {
-                ...data,
-                [publicAddress]: {
-                    ...data[publicAddress],
-                    NFTs: [...logs, contractAddress],
-                },
-            };
-
-            // console.log("New document: ", document)
-
-            await uploadToSkyDB(document);
-        } else {
-            // console.log("Error: that public address is not in the database");
-        }
-    };
-
     return {
         getDataFromSkyDB,
         getUser,
@@ -371,8 +323,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
         onboardUser,
         updateUser,
         logTransaction,
-        logContractAddress,
-        updateUserNFTs,
         getAllCollections,
         updateUserNFTDrafts,
         saveCollectionDraft,
