@@ -23,6 +23,10 @@ module.exports = {
       url: `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       accounts: [`${TEST_PRIVATE_KEY}`]
     },
+    rinkeby: {
+        url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+        accounts: [`${TEST_PRIVATE_KEY}`]
+      },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/v1/084e575b9401d628d1507747de3e0f72ef07261c/",
       accounts: [`${TEST_PRIVATE_KEY}`]
