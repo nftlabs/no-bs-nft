@@ -177,7 +177,7 @@ function CollectionView({
     );
 }
 
-export default function Collection(): JSX.Element {
+export default function CollectionPage(): JSX.Element {
     const [createNFTView, setCreateNFTView] = useState<boolean>(false);
     const [NFTs, setNFTs] = useState<(NFTData | NFTDraft)[]>([]);
 
@@ -218,15 +218,14 @@ export default function Collection(): JSX.Element {
         await saveCollectionDraft(title, symbol, NFTs);
     };
 
-    const saveNFTAsDraft = async (nftObject: NFTDraft) => {
-        // skydb call to update saved drafts
+    const saveNFTInDraft = async (nftObject: NFTDraft) => {
         setNFTs([...NFTs, nftObject]);
     };
 
     return createNFTView ? (
         <CreateNFTView
             draft={isDraft.current}
-            saveNFT={saveNFTAsDraft}
+            saveNFT={saveNFTInDraft}
             collectionTitle={collectionProperties.current.title}
         />
     ) : (
@@ -239,4 +238,4 @@ export default function Collection(): JSX.Element {
     );
 }
 
-Collection.displayName = 'Collection';
+CollectionPage.displayName = 'CollectionPage';
