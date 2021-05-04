@@ -1,4 +1,4 @@
-import { magicClient } from './magic';
+import { MagicMaticClient } from './magic';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -15,13 +15,13 @@ export default function useUser(): UserHandler {
     const [loading, setLoading] = useState(true);
 
     async function login(email: string) {
-        const loginDid = await magicClient?.auth.loginWithMagicLink({ email });
+        const loginDid = await MagicMaticClient?.auth.loginWithMagicLink({ email });
         if (!loginDid) {
             console.error('failed to login !loginMeta');
             return;
         }
 
-        const userMeta = await magicClient?.user.getMetadata();
+        const userMeta = await MagicMaticClient?.user.getMetadata();
         if (!userMeta) {
             console.error('failed to login !userMeta');
             return;
@@ -32,7 +32,7 @@ export default function useUser(): UserHandler {
     }
 
     async function logout() {
-        await magicClient?.user.logout();
+        await MagicMaticClient?.user.logout();
         setUser(null);
         router.push('/');
     }
@@ -40,11 +40,11 @@ export default function useUser(): UserHandler {
     useEffect(() => {
         if (!user) {
             (async () => {
-                const isLoggedIn = await magicClient?.user.isLoggedIn();
+                const isLoggedIn = await MagicMaticClient?.user.isLoggedIn();
                 console.log('magic user is loggedIn', isLoggedIn);
                 if (isLoggedIn) {
                     try {
-                        const userMeta = await magicClient?.user.getMetadata();
+                        const userMeta = await MagicMaticClient?.user.getMetadata();
                         console.log(userMeta);
                         setUser(userMeta);
                     } catch (err) {
