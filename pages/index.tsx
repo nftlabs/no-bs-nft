@@ -1,116 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetStaticProps } from 'next';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
+  Box,
   Center,
-  Image,
-  Flex,
   Stack,
+  Flex,
+  Image,
   Button,
   Input,
   Spinner,
   Text,
-  useToast,
   HStack,
 } from '@chakra-ui/react';
 
-import { ContentWrapper } from '../components/ContentWrapper';
-
 import useUser from '../lib/useUser';
-import { errorToast } from '../lib/toast';
-import { compileERC721 } from '../lib/compile';
-import { LoggedInHeader } from '../components/LoggedInHeader';
+import { useRouter } from 'next/router';
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { NFT, BidExecutor } = await compileERC721();
-
-  return {
-    props: {
-      NFT,
-      BidExecutor,
-    },
-  };
-};
-
-const validateEmail = (emailToValidate: string) => {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(emailToValidate);
-};
-
-const LoggedInLanding: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
+const LandingHeader: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
   const router = useRouter();
+  const buttonClick = useCallback(() => {
+    if (user) {
+      logout();
+    } else {
+      router.push('/login');
+    }
+  }, [user, router, logout]);
 
   return (
-    <Stack>
-      <Text>Logged In as: {user.email}</Text>
+    <Stack width="100vw" height={16} p={4}>
       <Center>
-        <Button
-          onClick={() => {
-            router.push('/dashboard');
-          }}
-        >
-          Enter
-        </Button>
+        <HStack as={Flex} width="1000px">
+          <HStack flexGrow={1}>
+            <Image src="/openape_landing_logo.svg" mr={8} />
+            <Text variant="default" p={6}>
+              Features
+            </Text>
+            <Text variant="default" p={6}>
+              FAQ
+            </Text>
+            <Text variant="default" p={6}>
+              About
+            </Text>
+          </HStack>
+          <Button
+            variant="gradient"
+            size="small"
+            mb="8px"
+            onClick={buttonClick}
+            justifySelf="flex-end"
+          >
+            {user ? 'logout' : 'login'}
+          </Button>
+        </HStack>
       </Center>
     </Stack>
   );
 };
-LoggedInLanding.displayName = 'LoggedInLanding';
 
-const LoggedOutLanding: React.FC<{ login: any }> = ({ login }) => {
-  const [email, setEmail] = useState<string>('');
+LandingHeader.displayName = 'LandingHeader';
 
-  const [authLoading, setAuthLoading] = useState<boolean>(false);
-  const [authLoadingText, setAuthLoadingText] = useState<string>('');
-
-  const toast = useToast();
-
-  const onboardUser = async () => {
-    setAuthLoadingText('Entering the metaverse');
-    setAuthLoading(true);
-
-    try {
-      await login(email);
-    } catch (err) {
-      errorToast(toast, 'Something went wrong. Please try again.');
-      console.log(err);
-    }
-
-    setAuthLoading(false);
-    setAuthLoadingText('');
-  };
-
-  return (
-    <Stack>
-      <Input
-        border="1px"
-        borderColor="black"
-        placeholder="Enter your email address"
-        width="320px"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        errorBorderColor="crimson"
-        isInvalid={email !== '' && !validateEmail(email)}
-      />
-      <Button
-        onClick={onboardUser}
-        className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-      >
-        {!authLoading ? (
-          'Enter the Metaverse'
-        ) : (
-          <Flex flexDir="row" justify="center" alignItems="center">
-            <Spinner size="sm" />
-            <Text mx={2}>{authLoadingText}</Text>
-          </Flex>
-        )}
-      </Button>
-    </Stack>
-  );
+const LandingHero: React.FC<{}> = () => {
+  return <Stack width="100vw" minH={16} background="white"></Stack>;
 };
 
-LoggedOutLanding.displayName = 'LoggedOutLanding';
+LandingHero.displayName = 'LandingHero';
+
+const LandingSub1: React.FC<{}> = () => {
+  return <Stack width="100vw" minH={16} background="black"></Stack>;
+};
+
+LandingSub1.displayName = 'LandingSub1';
+
+const LandingSub2: React.FC<{}> = () => {
+  return <Stack width="100vw" minH={16} background="white"></Stack>;
+};
+
+LandingSub2.displayName = 'LandingSub2';
+
+const LandingSub3: React.FC<{}> = () => {
+  return <Stack width="100vw" minH={16} background="black"></Stack>;
+};
+
+LandingSub3.displayName = 'LandingSub3';
+
+const LandingLogin: React.FC<{ user: any; login: any }> = ({ user, login }) => {
+  return <Stack width="100vw" minH={16} background="white"></Stack>;
+};
+
+LandingLogin.displayName = 'LandingLogin';
+
+const LandingFooter: React.FC<{}> = () => {
+  return <Stack width="100vw" minH={16} background="black"></Stack>;
+};
+
+LandingFooter.displayName = 'LandingFooter';
 
 export default function App(): JSX.Element {
   const { user, login, logout, loading } = useUser();
@@ -127,44 +110,13 @@ export default function App(): JSX.Element {
 
   return (
     <>
-      <ContentWrapper>
-        <Center mt="16">
-          <Stack maxW="800px">
-            <Stack as={Flex} mb={4} px={4}>
-              {user ? <LoggedInHeader /> : ''}
-
-              <Center>
-                <Image width="120px" height="120px" src="/openape-logo.svg" />
-              </Center>
-              <Text
-                color="gray.800"
-                fontSize="4xl"
-                fontWeight="bold"
-                mb={4}
-                textAlign="center"
-              >
-                Anyone, anywhere, can create and sell NFTs
-              </Text>
-              <Text
-                fontSize="2xl"
-                color="gray.700"
-                textAlign="center"
-                fontWeight="light"
-              >
-                Make any digital content ownable on the blockchain.
-              </Text>
-            </Stack>
-
-            <Center>
-              {user ? (
-                <LoggedInLanding user={user} logout={logout} />
-              ) : (
-                <LoggedOutLanding login={login} />
-              )}
-            </Center>
-          </Stack>
-        </Center>
-      </ContentWrapper>
+      <LandingHeader user={user} login={login} logout={logout} />
+      <LandingHero />
+      <LandingSub1 />
+      <LandingSub2 />
+      <LandingSub3 />
+      <LandingLogin user={user} login={login} />
+      <LandingFooter />
     </>
   );
 }

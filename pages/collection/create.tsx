@@ -20,14 +20,18 @@ export default function CreateCollection(): JSX.Element {
                 />
                 <InputGroup>
                     <InputLeftAddon children="$" />
-                    <Input placeholder="SYMBOL" width={24} />
+                    <Input
+                        placeholder="SYMBOL"
+                        width={24}
+                        onChange={(event) => setSymbolValue(event.target.value)}
+                    />
                 </InputGroup>
                 <Button
                     width={24}
                     backgroundColor="purple"
                     color="white"
                     onClick={() => {
-                        console.log('create');
+                        console.log('create', nameValue, symbolValue);
                     }}
                 >
                     Create

@@ -39,9 +39,9 @@ export default function useUser(): UserHandler {
 
     useEffect(() => {
         if (!user) {
-            console.log('magic user is loggedIn', magicClient?.user.isLoggedIn());
             (async () => {
                 const isLoggedIn = await magicClient?.user.isLoggedIn();
+                console.log('magic user is loggedIn', isLoggedIn);
                 if (isLoggedIn) {
                     try {
                         const userMeta = await magicClient?.user.getMetadata();
