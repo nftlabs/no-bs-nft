@@ -8,6 +8,7 @@ import {
   Image,
   Button,
   Input,
+  Heading,
   Spinner,
   Text,
   HStack,
@@ -59,8 +60,51 @@ const LandingHeader: React.FC<{ user: any; logout: any }> = ({ user, logout }) =
 
 LandingHeader.displayName = 'LandingHeader';
 
-const LandingHero: React.FC<{}> = () => {
-  return <Stack width="100vw" minH={16} background="white"></Stack>;
+const LandingHero: React.FC<{ user: any; login: any }> = ({ user, login }) => {
+  const router = useRouter();
+
+  return (
+    <Stack width="100vw" minH="40vh" p={12}>
+      <Center>
+        <HStack maxW="1000px">
+          <Stack as={Flex} alignItems="center">
+            <Heading size="2xl" p={4} variant="heading" textAlign="center">
+              The simplest way to create and sell NFTs
+            </Heading>
+            <Text px={4} pb={4} variant="subheading" fontWeight="light">
+              Create an account, and start minting NFTs
+            </Text>
+            {user ? (
+              <Button width="50%" variant="gradient" onClick={() => router.push('/dashboard')}>
+                Enter the Metaverse
+              </Button>
+            ) : (
+              <Flex>
+                <Input
+                  placeholder="Email Address"
+                  focusBorderColor="primary"
+                  borderRadius="4px"
+                  size="lg"
+                  m={4}
+                />
+                <Button
+                  m={4}
+                  size="lg"
+                  variant="gradient"
+                  borderRadius="4px"
+                  width="100px"
+                  onClick={login}
+                >
+                  Get Started
+                </Button>
+              </Flex>
+            )}
+          </Stack>
+          <Image p={8} width="400px" src="/openape_landing_hero.png" />
+        </HStack>
+      </Center>
+    </Stack>
+  );
 };
 
 LandingHero.displayName = 'LandingHero';
@@ -110,8 +154,8 @@ export default function App(): JSX.Element {
 
   return (
     <>
-      <LandingHeader user={user} login={login} logout={logout} />
-      <LandingHero />
+      <LandingHeader user={user} logout={logout} />
+      <LandingHero user={user} login={login} />
       <LandingSub1 />
       <LandingSub2 />
       <LandingSub3 />
