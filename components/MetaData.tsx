@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 const TITLE = 'OpenApe';
 const DESCRIPTION = 'Anyone, anywhere, can create and sell NFTs.';
-const URL = 'https://nobullshitnft.com';
+const URL = 'https://nftlabs-openape.zeet.app/';
 const IMAGE = ``;
 
 interface MetaDataProps {
