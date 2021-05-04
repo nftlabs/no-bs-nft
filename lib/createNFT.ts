@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 
-import { deployNFTContract } from './deploy';
 import { uploadWithoutWait, uploadAndWaitForMine } from './upload';
 
 interface ContractObject {
@@ -36,12 +35,9 @@ interface TransactionParams {
  * @param userEmail
  * @param userPublicAddress
  */
-export default async function createCollection(
+export default async function createNFT(
   NftObject: ContractObject,
-  BidExecutorObject: ContractObject,
-
-  name: string,
-  symbol: string,
+  contractAddress: string,
 
   NFTs: NFT[],
 
@@ -52,15 +48,6 @@ export default async function createCollection(
   userEmail: string,
   userPublicAddress: string,
 ) {
-  const contractAddress: string = await deployNFTContract(
-    NftObject,
-    BidExecutorObject,
-    signer,
-    name,
-    symbol,
-    chainId,
-  );
-
   const contract = new ethers.Contract(contractAddress, NftObject.abi, signer);
 
   let txNonce_magic: number = parseInt((await signer.getTransactionCount()).toString());

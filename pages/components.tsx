@@ -1,17 +1,11 @@
-import { Flex, Button, Heading, Text, Input, Image } from "@chakra-ui/react";
+import React from 'react';
+import { Flex, Button, Heading, Text, Input, Image } from '@chakra-ui/react';
 
 export default function Components() {
   return (
-    <Flex 
-      padding="40px"
-      width="100vw" 
-      height="100vh"
-      flexWrap="wrap"
-    >
+    <Flex padding="40px" width="100vw" height="100vh" flexWrap="wrap">
       <Flex direction="column" marginX="40px">
-        <Heading>
-          Large Heading
-        </Heading>
+        <Heading>Large Heading</Heading>
         <Text variant="heading" mb="8px" mt="8px">
           Heading
         </Text>
@@ -30,7 +24,7 @@ export default function Components() {
         <Text variant="heading" mb="8px">
           Color Palette
         </Text>
-        <Flex >
+        <Flex>
           <Pane color="gradient" />
           <Pane color="primary" />
           <Pane color="violet" />
@@ -51,107 +45,59 @@ export default function Components() {
         <Flex>
           <Flex direction="column" mr="20px">
             <Text variant="subheading">Medium</Text>
-            <Button 
-              variant="gradient" 
-              size="medium"
-              mb="8px"
-            >
+            <Button variant="gradient" size="medium" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="primary" 
-              size="medium"
-              mb="8px"
-            >
+            <Button variant="primary" size="medium" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="dark" 
-              size="medium"
-              mb="8px"
-            >
+            <Button variant="dark" size="medium" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="normal" 
-              size="medium"
-            >
+            <Button variant="normal" size="medium">
               Click me
             </Button>
           </Flex>
 
           <Flex direction="column">
             <Text variant="subheading">Small</Text>
-            <Button 
-              variant="gradient" 
-              size="small"
-              mb="8px"
-            >
+            <Button variant="gradient" size="small" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="primary" 
-              size="small"
-              mb="8px"
-            >
+            <Button variant="primary" size="small" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="dark" 
-              size="small"
-              mb="8px"
-            >
+            <Button variant="dark" size="small" mb="8px">
               Click me
             </Button>
-            <Button 
-              variant="normal" 
-              size="small"
-            >
+            <Button variant="normal" size="small">
               Click me
             </Button>
           </Flex>
         </Flex>
       </Flex>
-      
+
       <Flex direction="column" marginX="40px">
         <Text variant="heading" mb="8px">
           Inputs
         </Text>
         <Flex direction="column">
           <Flex direction="column" mb="8px">
-            <Text variant="label">
-              Username
-            </Text>
-            <Input 
-              placeholder="Input with label" 
-              focusBorderColor="primary"
-            />
+            <Text variant="label">Username</Text>
+            <Input placeholder="Input with label" focusBorderColor="primary" />
           </Flex>
-          
-          <Input 
-            placeholder="Enter input here" 
-            focusBorderColor="primary"
-            mb="8px" 
-          />
-          
-          <Input 
-            value="Here is an input" 
-            focusBorderColor="primary"
-            mb="8px"
-          />
+
+          <Input placeholder="Enter input here" focusBorderColor="primary" mb="8px" />
+
+          <Input value="Here is an input" focusBorderColor="primary" mb="8px" />
 
           <Flex>
-            <Input 
-              placeholder="Input with button" 
+            <Input
+              placeholder="Input with button"
               focusBorderColor="primary"
               borderRadius="4px 0px 0px 4px"
             />
-            <Button 
-              size="small" 
-              variant="gradient"
-              borderRadius="0px 4px 4px 0px"
-              width="100px"
-            >
+            <Button size="small" variant="gradient" borderRadius="0px 4px 4px 0px" width="100px">
               Submit
             </Button>
           </Flex>
@@ -162,7 +108,7 @@ export default function Components() {
         <Text variant="heading" mb="8px">
           Cards
         </Text>
-        <Flex 
+        <Flex
           variant="card"
           height="200px"
           width="500px"
@@ -172,7 +118,7 @@ export default function Components() {
           position="relative"
           boxShadow="0px 8px 20px rgba(0, 0, 0, 0.1)"
         >
-          <Image 
+          <Image
             position="absolute"
             top="20px"
             right="20px"
@@ -182,42 +128,27 @@ export default function Components() {
             src="https://d15omoko64skxi.cloudfront.net/wp-content/uploads/2018/01/beeple.jpg"
           />
 
-          <Text variant="subheading">
-            Example title
-          </Text>
+          <Text variant="subheading">Example title</Text>
           <Text variant="default" mt="4px" width="300px">
             This is an example card description. You can use it to describe the card.
           </Text>
 
-          <Button
-            position="absolute"
-            variant="gradient"
-            size="small"
-            bottom="20px"
-          >
+          <Button position="absolute" variant="gradient" size="small" bottom="20px">
             Do something
           </Button>
         </Flex>
       </Flex>
     </Flex>
-  )
+  );
 }
 
 function Pane({ color }) {
   return (
     <Flex direction="column" mr="8px" mb="8px">
-      <Text
-        fontSize="12px"
-        color="#666"
-      >
+      <Text fontSize="12px" color="#666">
         {color}
       </Text>
-      <Flex 
-        height="80px" 
-        width="80px" 
-        borderRadius="4px"
-        bg={color}
-      />
+      <Flex height="80px" width="80px" borderRadius="4px" bg={color} />
     </Flex>
-  )
+  );
 }

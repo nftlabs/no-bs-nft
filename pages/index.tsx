@@ -1,116 +1,235 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetStaticProps } from 'next';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
+  Box,
   Center,
-  Image,
-  Flex,
   Stack,
+  Flex,
+  Image,
   Button,
   Input,
+  Heading,
   Spinner,
   Text,
-  useToast,
   HStack,
 } from '@chakra-ui/react';
 
-import { ContentWrapper } from '../components/ContentWrapper';
-
 import useUser from '../lib/useUser';
-import { errorToast } from '../lib/toast';
-import { compileERC721 } from '../lib/compile';
-import { LoggedInHeader } from '../components/LoggedInHeader';
+import { useRouter } from 'next/router';
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { NFT, BidExecutor } = await compileERC721();
+const LandingHeader: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
+  const router = useRouter();
+  const buttonClick = useCallback(() => {
+    if (user) {
+      logout();
+    } else {
+      router.push('/login');
+    }
+  }, [user, router, logout]);
 
-  return {
-    props: {
-      NFT,
-      BidExecutor,
-    },
-  };
+  return (
+    <Stack width="100vw" height={16} p={4}>
+      <Center>
+        <HStack as={Flex} width="100%" maxW="1000px">
+          <HStack flexGrow={1}>
+            <Image src="/openape_landing_logo.svg" mr={8} />
+            <Text variant="default" p={6} display={['none', 'block']}>
+              Features
+            </Text>
+            <Text variant="default" p={6} display={['none', 'block']}>
+              FAQ
+            </Text>
+            <Text variant="default" p={6} display={['none', 'block']}>
+              About
+            </Text>
+          </HStack>
+          {user ? (
+            <Button
+              variant="gradient"
+              size="small"
+              mb="8px"
+              onClick={buttonClick}
+              justifySelf="flex-end"
+            >
+              Logout
+            </Button>
+          ) : (
+            ''
+          )}
+        </HStack>
+      </Center>
+    </Stack>
+  );
 };
 
-const validateEmail = (emailToValidate: string) => {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(emailToValidate);
-};
+LandingHeader.displayName = 'LandingHeader';
 
-const LoggedInLanding: React.FC<{ user: any; logout: any }> = ({ user, logout }) => {
+const LandingHero: React.FC<{ user: any; login: any }> = ({ user, login }) => {
   const router = useRouter();
 
   return (
-    <Stack>
-      <Text>Logged In as: {user.email}</Text>
+    <Stack width="100vw" minH="40vh" p={[4, 12]}>
+      <Center>
+        <Stack as={Flex} flexDir={['column-reverse', 'row']} width="100%" maxW="1000px">
+          <Stack as={Flex} alignItems="center" textAlign="center">
+            <Heading size="2xl" p={4} variant="heading">
+              The simplest way to create and sell NFTs
+            </Heading>
+            <Text px={4} pb={4} variant="subheading" fontWeight="light">
+              Create an account, and start minting NFTs
+            </Text>
+            <Button
+              size="medium"
+              width="50%"
+              variant="gradient"
+              onClick={() => router.push('/login')}
+            >
+              Get Started
+            </Button>
+          </Stack>
+          <Center>
+            <Image p={[4, 12]} width={['200px', '400px']} src="/openape_landing_hero.png" />
+          </Center>
+        </Stack>
+      </Center>
+    </Stack>
+  );
+};
+
+LandingHero.displayName = 'LandingHero';
+
+const LandingSub1: React.FC<{}> = () => {
+  return (
+    <Stack width="100vw" minH="40vh">
+      <Center>
+        <Stack
+          as={Flex}
+          flexDir={['column-reverse', 'row']}
+          width="100%"
+          maxW="1000px"
+          alignItems="center"
+          pt={8}
+        >
+          <Stack as={Flex} alignItems="center" width="100%" maxWidth="500px" textAlign="center">
+            <Heading p={4} variant="subheading">
+              Easily create collections and NFTs
+            </Heading>
+            <Text px={4} pb={4} variant="default" fontWeight="light">
+              Upload, create and mint all for free
+            </Text>
+          </Stack>
+          <Image p={[2, 8]} width={['200px', '400px']} src="/openape_landing_second.png" />
+        </Stack>
+      </Center>
+    </Stack>
+  );
+};
+
+LandingSub1.displayName = 'LandingSub1';
+
+const LandingSub2: React.FC<{}> = () => {
+  return (
+    <Stack width="100vw" minH="40vh">
+      <Center>
+        <Stack
+          as={Flex}
+          flexDir={['column', 'row']}
+          width="100%"
+          maxW="1000px"
+          alignItems="center"
+          pt={8}
+        >
+          <Image p={[2, 8]} width={['200px', '400px']} src="/openape_landing_third.png" />
+          <Stack
+            p={8}
+            as={Flex}
+            alignItems="center"
+            width="100%"
+            maxWidth="500px"
+            textAlign="center"
+          >
+            <Heading p={4} variant="subheading">
+              Showcase your collection
+            </Heading>
+            <Text px={4} pb={4} variant="default" fontWeight="light">
+              In just a few clicks - you can show off all of your super cool NFT’s with a custom
+              link!
+            </Text>
+          </Stack>
+        </Stack>
+      </Center>
+    </Stack>
+  );
+};
+LandingSub2.displayName = 'LandingSub2';
+
+const LandingSub3: React.FC<{}> = () => {
+  return (
+    <Stack width="100vw" minH="40vh" pb={8}>
+      <Center>
+        <Stack
+          as={Flex}
+          flexDir={['column', 'row']}
+          width="100%"
+          maxW="1000px"
+          alignItems="center"
+          pt={8}
+        >
+          <Stack
+            p={8}
+            as={Flex}
+            alignItems="center"
+            width="100%"
+            maxWidth="500px"
+            textAlign="center"
+          >
+            <Heading p={4} variant="subheading">
+              Buy and Sell
+            </Heading>
+            <Text px={4} pb={4} variant="default" fontWeight="light">
+              Easily share your NFT link so others can buy, or browse what’s for sale!
+            </Text>
+          </Stack>
+          <Image p={[2, 8]} width={['200px', '400px']} src="/openape_landing_fourth.png" />
+        </Stack>
+      </Center>
+    </Stack>
+  );
+};
+
+LandingSub3.displayName = 'LandingSub3';
+
+const LandingLogin: React.FC<{ user: any; login: any }> = ({ user, login }) => {
+  const router = useRouter();
+  return (
+    <Stack width="100vw" minH="20vh" background="gradient" p={12}>
+      <Center>
+        <Text variant="heading" color="white" mb={8} textAlign="center">
+          Try OpenApe and start minting today
+        </Text>
+      </Center>
       <Center>
         <Button
+          variant="normal"
+          size="medium"
           onClick={() => {
-            router.push('/dashboard');
+            router.push('/login');
           }}
         >
-          Enter
+          Let{"'"}s go
         </Button>
       </Center>
     </Stack>
   );
 };
-LoggedInLanding.displayName = 'LoggedInLanding';
 
-const LoggedOutLanding: React.FC<{ login: any }> = ({ login }) => {
-  const [email, setEmail] = useState<string>('');
+LandingLogin.displayName = 'LandingLogin';
 
-  const [authLoading, setAuthLoading] = useState<boolean>(false);
-  const [authLoadingText, setAuthLoadingText] = useState<string>('');
-
-  const toast = useToast();
-
-  const onboardUser = async () => {
-    setAuthLoadingText('Entering the metaverse');
-    setAuthLoading(true);
-
-    try {
-      await login(email);
-    } catch (err) {
-      errorToast(toast, 'Something went wrong. Please try again.');
-      console.log(err);
-    }
-
-    setAuthLoading(false);
-    setAuthLoadingText('');
-  };
-
-  return (
-    <Stack>
-      <Input
-        border="1px"
-        borderColor="black"
-        placeholder="Enter your email address"
-        width="320px"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        errorBorderColor="crimson"
-        isInvalid={email !== '' && !validateEmail(email)}
-      />
-      <Button
-        onClick={onboardUser}
-        className="border-2 border-black bg-white shadow-md rounded-lg h-10"
-      >
-        {!authLoading ? (
-          'Enter the Metaverse'
-        ) : (
-          <Flex flexDir="row" justify="center" alignItems="center">
-            <Spinner size="sm" />
-            <Text mx={2}>{authLoadingText}</Text>
-          </Flex>
-        )}
-      </Button>
-    </Stack>
-  );
+const LandingFooter: React.FC<{}> = () => {
+  return <Stack width="100vw" minH="20vh"></Stack>;
 };
 
-LoggedOutLanding.displayName = 'LoggedOutLanding';
+LandingFooter.displayName = 'LandingFooter';
 
 export default function App(): JSX.Element {
   const { user, login, logout, loading } = useUser();
@@ -127,44 +246,13 @@ export default function App(): JSX.Element {
 
   return (
     <>
-      <ContentWrapper>
-        <Center mt="16">
-          <Stack maxW="800px">
-            <Stack as={Flex} mb={4} px={4}>
-              {user ? <LoggedInHeader /> : ''}
-
-              <Center>
-                <Image width="120px" height="120px" src="/openape-logo.svg" />
-              </Center>
-              <Text
-                color="gray.800"
-                fontSize="4xl"
-                fontWeight="bold"
-                mb={4}
-                textAlign="center"
-              >
-                Anyone, anywhere, can create and sell NFTs
-              </Text>
-              <Text
-                fontSize="2xl"
-                color="gray.700"
-                textAlign="center"
-                fontWeight="light"
-              >
-                Make any digital content ownable on the blockchain.
-              </Text>
-            </Stack>
-
-            <Center>
-              {user ? (
-                <LoggedInLanding user={user} logout={logout} />
-              ) : (
-                <LoggedOutLanding login={login} />
-              )}
-            </Center>
-          </Stack>
-        </Center>
-      </ContentWrapper>
+      <LandingHeader user={user} logout={logout} />
+      <LandingHero user={user} login={login} />
+      <LandingSub1 />
+      <LandingSub2 />
+      <LandingSub3 />
+      <LandingLogin user={user} login={login} />
+      <LandingFooter />
     </>
   );
 }
