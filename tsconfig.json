@@ -1,6 +1,10 @@
 {
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": ".",
@@ -17,7 +21,11 @@
     ],
     "noEmit": true,
     "rootDir": ".",
-    "typeRoots": ["@types", "node_modules/@types", "../../node_modules/@types"],
+    "typeRoots": [
+      "@types",
+      "node_modules/@types",
+      "../../node_modules/@types"
+    ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

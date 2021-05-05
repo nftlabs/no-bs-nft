@@ -1,9 +1,6 @@
-const hre = require("hardhat");
-const ethers = hre.ethers;
-
 async function main() {
 
-  const [deployer] = await hre.ethers.getSigners();
+  const [deployer] = await ethers.getSigners();
 
   console.log(
     "Deploying contracts with the account:",
@@ -12,17 +9,15 @@ async function main() {
   
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const BidExecutor_Factory = await hre.ethers.getContractFactory("BidExecutor");
-  const bidExecutor = await BidExecutor_Factory.deploy();
+//   const OpenApeRegistry_Factory = await ethers.getContractFactory("OpenApeRegistry");
+//   const openApe = await OpenApeRegistry_Factory.deploy();
 
-  console.log("bidExecutor address:", bidExecutor.address);
+//   console.log("OpenApeRegistry address:", openApe.address);
 
-  const NFT_Factory = await hre.ethers.getContractFactory("NFT");
-  const nft = await NFT_Factory.deploy("Matic test", "Matic", bidExecutor.address)
+const BE_Factory = await ethers.getContractFactory("BidExecutor");
+  const bidexecutor = await BE_Factory.deploy();
 
-  console.log("nft address:", nft.address);
-
-  console.log(process.argv);
+  console.log("OpenApeRegistry address:", bidexecutor.address);
 }
 
 main()
@@ -31,3 +26,6 @@ main()
     console.error(error);
     process.exit(1);
   });
+
+// OpenApe address:  0x8faD543dEecf009a37f24De9926e288c3C384adD
+// BidExecutor address: 0x539525b8081FeA30AE469Bd136dCd5CF5A5517b7
