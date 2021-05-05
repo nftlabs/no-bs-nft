@@ -19,7 +19,7 @@ export const MagicMumbaiClient = isClient()
     ? new MagicClient(process.env.NEXT_PUBLIC_MAGIC_KEY, {
           network: {
               rpcUrl:
-                  'https://rpc-mainnet.maticvigil.com/v1/084e575b9401d628d1507747de3e0f72ef07261c/',
+              'https://rpc-mumbai.maticvigil.com/v1/084e575b9401d628d1507747de3e0f72ef07261c',
               chainId: 137,
           },
       })
@@ -29,7 +29,7 @@ export const MagicRinkebyClient = isClient()
     ? new MagicClient(process.env.NEXT_PUBLIC_MAGIC_KEY, {
           network: {
               rpcUrl:
-                  'https://rpc-mainnet.maticvigil.com/v1/084e575b9401d628d1507747de3e0f72ef07261c/',
+              `https://eth-rinkeby.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
               chainId: 137,
           },
       })
