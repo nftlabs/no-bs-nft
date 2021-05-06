@@ -1,96 +1,125 @@
 import { ethers } from 'ethers';
 
-import { deployNFTContract } from './deploy';
 import { uploadWithoutWait, uploadAndWaitForMine } from './upload';
+import { saltToHex, buildBytecode, buildCreate2Address } from './deployWithCreate2';
 
-interface ContractObject {
-  abi: any;
-  bytecode: any;
-}
+import bidExecutorArtifact from '../artifacts/contracts/BidExecutor.sol/BidExecutor.json';
+import nftArtifact from '../artifacts/contracts/NFT.sol/NFT.json';
 
 interface NFT {
-  metadataLink: string;
-  amount: number;
+    metadataLink: string;
+    amount: number;
 }
 
 interface TransactionParams {
-  gasLimit: number;
-  txNonce: number;
-  gasPrice: ethers.BigNumber;
+    gasLimit: number;
+    gasPrice: ethers.BigNumber;
 }
 
-/**
- * 1. Deploys NFT + auction system contracts
- * 2. Uploads all NFTs according to the given NFT info like name, amount, etc.
- * 3. Only awaits the last transaction. Sends the user an email notification once all the NFTs have been
- *    uploaded to the collection.
- *
- * @param NftObject
- * @param BidExecutorObject
- * @param name
- * @param symbol
- * @param NFTs
- * @param signer
- * @param chainId
- * @param txParams
- * @param userEmail
- * @param userPublicAddress
- */
-export default async function createCollection(
-  NftObject: ContractObject,
-  BidExecutorObject: ContractObject,
+const bidExecutorAddress = '';
 
-  name: string,
-  symbol: string,
-
-  NFTs: NFT[],
-
-  signer: any,
-  chainId: number,
-  txParams: TransactionParams,
-
-  userEmail: string,
-  userPublicAddress: string,
+export function getCreate2Address(
+    salt: string | number,
+    name: string,
+    symbol: string,
 ) {
-  const contractAddress: string = await deployNFTContract(
-    NftObject,
-    BidExecutorObject,
-    signer,
-    name,
-    symbol,
-    chainId,
-  );
+    const contractBytecode = nftArtifact.bytecode;
+    const constructorTypes = ['string', 'string', 'address'];
+    const constructorArgs = [name, symbol, bidExecutorAddress]
 
-  const contract = new ethers.Contract(contractAddress, NftObject.abi, signer);
+    return buildCreate2Address(
+        saltToHex(salt),
+        buildBytecode(constructorTypes, constructorArgs, contractBytecode),
+    );
+}
 
-  let txNonce_magic: number = parseInt((await signer.getTransactionCount()).toString());
-  let finalTx;
+// / Points the helper auction contract to the NFT contract.
+export const setNFTFactory = async (
+    nftAddress: string,
+    signer: any,
+) => {
 
-  for (let i = 0; i < NFTs.length; i++) {
-    const { metadataLink, amount } = NFTs[i];
+    const { abi } = bidExecutorArtifact;
+    try {
+        const bidExecutor = new ethers.Contract(bidExecutorAddress, abi, signer);
 
-    for (let j = 1; j <= amount; j++) {
-      txNonce_magic = uploadWithoutWait(contract, userPublicAddress, metadataLink, txParams);
+        const bidExecutorTx = await bidExecutor.connect(signer).setNftFactory(nftAddress);
+        await bidExecutorTx.wait();
 
-      if (i === NFTs.length - 1 && j === amount) {
-        finalTx = await uploadAndWaitForMine(contract, userPublicAddress, metadataLink, txParams);
-
-        fetch('/api/magicUpload', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            publicAddress: userPublicAddress,
-            contractAddress: contract.address,
-            chainId,
-            txNonce: txNonce_magic,
-          }),
-        });
-      }
+        return {
+            tx: bidExecutorTx,
+        };
+    } catch (err) {
+        console.log(err);
     }
-  }
+};
 
-  return contractAddress;
+export const deployNFTContract = async (
+    contract: any,
+
+    name: string,
+    symbol: string,
+    salt: string | number,
+) => {
+    
+    let nftAddress: string;
+    const contractBytecode = nftArtifact.bytecode;
+    const constructorTypes = ['string', 'string', 'address'];
+    const constructorArgs = [name, symbol, bidExecutorAddress]
+
+    try {
+        const saltHex = saltToHex(salt)
+
+        const bytecode = buildBytecode(
+            constructorTypes,
+            constructorArgs,
+            contractBytecode,
+        )
+        const tx = await contract.deployNFT(bytecode, saltHex)
+        await tx.wait()
+
+        nftAddress = buildCreate2Address(saltHex, bytecode);
+
+    } catch (err) {
+        console.error(err);
+    }
+
+    return nftAddress;
+};
+
+export default async function createCollection(
+    contract: any,
+    signer: any,
+
+    name: string,
+    symbol: string,
+    salt: string | number,
+    NFTs: NFT[],
+
+    txParams: TransactionParams,
+) {
+    const contractAddress: string = await deployNFTContract(
+        contract,
+        name,
+        symbol,
+        salt,
+    );
+    const userPublicAddress: string = await signer.getAddress();
+    const nftContract = new ethers.Contract(contractAddress, nftArtifact.abi, signer);
+
+    await setNFTFactory(contractAddress, signer);
+
+    for (let i = 0; i < NFTs.length; i++) {
+        const { metadataLink, amount } = NFTs[i];
+
+        for (let j = 1; j <= amount; j++) {
+            uploadWithoutWait(nftContract, userPublicAddress, metadataLink, txParams);
+
+            if (i === NFTs.length - 1 && j === amount) {
+                await uploadAndWaitForMine(nftContract, userPublicAddress, metadataLink, txParams);
+            }
+        }
+    }
+
+    return contractAddress;
 }

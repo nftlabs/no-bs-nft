@@ -6,20 +6,16 @@ import "./ERC721/IERC721.sol";
 
 contract BidExecutor {
 
-    address public NFT_Factory;
-    bool public factorySet;
+    mapping(address => bool) public registeredFactory;
 
-    function setNftFactory(address _factory) external {
-        require(!factorySet, "Factory has already been set and cannot be changed.");
-
-        NFT_Factory = _factory;
-        factorySet = true;
+    function registerNftFactory(address _factory) external {
+        registeredFactory[_factory] = true;
     }
 
     function executeBid(uint _tokenId, address _bidder) external {
-        require(msg.sender == NFT_Factory, "Only the NFT factory can execute a bid.");
+        require(registeredFactory[msg.sender], "Only a registered NFT factory can execute a bid.");
 
-        address owner = IERC721(NFT_Factory).ownerOf(_tokenId);
-        IERC721(NFT_Factory).safeTransferFrom(owner, _bidder, _tokenId, "");
+        address owner = IERC721(msg.sender).ownerOf(_tokenId);
+        IERC721(msg.sender).safeTransferFrom(owner, _bidder, _tokenId, "");
     }
 }

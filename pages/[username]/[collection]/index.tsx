@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 import { useRouter } from 'next/router';
+import { MagicMaticClient } from '../../../lib/magic';
 
 import useUser from '../../../lib/useUser';
-import useGasPrice from '../../../lib/useGasPrice';
 import { useDefaultSkyDB } from '../../../lib/useSkyDB';
 import createCollection from '../../../lib/createCollection';
 import { uploadMediaToSkynet, uploadMetadataToSkynet } from '../../../lib/skynet';
-import { ContractContext } from '../../../lib/ContractContext';
 
 import { ContentWrapper } from '../../../components/ContentWrapper';
 import { Button } from '@chakra-ui/button';
+import useCollection from '../../../lib/hooks/useCollection';
 
 interface NFTMetadata {
     name: string;
@@ -39,11 +37,6 @@ interface NFTToUpload {
     amount: number;
 }
 
-interface TransactionParams {
-    gasLimit: number;
-    txNonce: number;
-    gasPrice: ethers.BigNumber;
-}
 
 // If draft == true, then collectionIdentifier is the collection title.
 // If draft == false, then the collectionIdentifier is the collection's (i.e. the NFT contract's) address
@@ -108,56 +101,19 @@ function CollectionView({
     collectionProperties,
     saveCollectionDraft,
 }: any): JSX.Element {
-    const [NFT, BidExecutor] = useContext(ContractContext);
 
     const [title, setTitle] = useState<string>(collectionProperties.title);
     const [symbol, setSymbol] = useState<string>(collectionProperties.symbol);
 
-    const context = useWeb3React<Web3Provider>();
-    const { library, chainId } = context;
-
-    const { user } = useUser();
-
-    const { gasPrice, gasEstimates } = useGasPrice((chainId as number) || 1);
-    const { updateUserNFTs } = useDefaultSkyDB();
+    const { createNewCollection } = useCollection();
 
     const handleCreateCollection = async () => {
-        const signer = library.getSigner(user.publicAddress);
-        const txNonce_magic = parseInt((await signer.getTransactionCount()).toString());
-        const gasPriceInGwei = ethers.utils.parseUnits(gasPrice, 'gwei');
-        const gasLimit = gasEstimates.uploadTransaction;
 
-        const txParams: TransactionParams = {
-            gasLimit,
-            txNonce: txNonce_magic,
-            gasPrice: gasPriceInGwei,
-        };
-
-        const nftsToUpload: NFTToUpload[] = NFTs.map((nft: NFTData) => {
-            return {
-                metadataLink: nft.metadata.metadataLink,
-                amount: nft.amount,
-            };
-        });
-
-        const contractAddress = await createCollection(
-            NFT,
-            BidExecutor,
-
+        const contractAddress = await createNewCollection(
             title,
             symbol,
-
-            nftsToUpload,
-
-            signer,
-            chainId,
-            txParams,
-
-            user.email,
-            user.publicAddress,
+            NFTs,
         );
-        // save NFT metadata + other info to skydb
-        await updateUserNFTs(user.publicAddress, contractAddress, NFTs);
     };
 
     return (
@@ -175,7 +131,7 @@ function CollectionView({
 
 export default function CollectionPage(): JSX.Element {
     const [createNFTView, setCreateNFTView] = useState<boolean>(false);
-    const [NFTs, setNFTs] = useState<(NFTData | NFTDraft)[]>([]);
+    const [NFTs, setNFTs] = useState<(NFTDraft)[]>([]);
 
     const collectionProperties = useRef<CollectionProperties>({
         title: 'untitled',

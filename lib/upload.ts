@@ -2,7 +2,6 @@ import { ethers } from 'ethers';
 
 interface TransactionParams {
     gasLimit: number;
-    txNonce: number;
     gasPrice: ethers.BigNumber;
 }
 
@@ -14,13 +13,12 @@ export const uploadAndWaitForConfirmation = async (
     URI: string,
     txParams: TransactionParams,
 ) => {
-    const { gasLimit, txNonce, gasPrice } = txParams;
+    const { gasLimit, gasPrice } = txParams;
 
     try {
         // Wait for the transaction to be mined.
         const tx = await contract.mint(to, URI, {
             gasLimit,
-            nonce: txNonce,
             gasPrice,
         });
 
@@ -42,20 +40,17 @@ export const uploadAndWaitForMine = async (
     URI: string,
     txParams: TransactionParams,
 ) => {
-    const { gasLimit, txNonce, gasPrice } = txParams;
+    const { gasLimit, gasPrice } = txParams;
 
     try {
         // Wait for the transaction to be mined.
         const tx = await contract.mint(to, URI, {
             gasLimit,
-            nonce: txNonce,
             gasPrice,
         });
 
-        return tx;
     } catch (err) {
         console.error(err);
-        return '';
     }
 };
 
@@ -67,19 +62,15 @@ export const uploadWithoutWait = (
     URI: string,
     txParams: TransactionParams,
 ) => {
-    const { gasLimit, txNonce, gasPrice } = txParams;
+    const { gasLimit, gasPrice } = txParams;
 
     try {
         // Wait for the transaction to be mined.
         contract.mint(to, URI, {
             gasLimit,
-            nonce: txNonce,
             gasPrice,
         });
-
-        return txNonce + 1;
     } catch (err) {
         console.error(err);
-        return 0;
     }
 };
