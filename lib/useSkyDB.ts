@@ -248,8 +248,28 @@ export default function useSkyDB(dataKey: string, seed: string): any {
   // Visit the link at the top of the file for the SkyDB document shape.
   const getAllCollections = async (publicAddress: string) => {
     const data = await getDataFromSkyDB();
-    if (data && data[publicAddress]) {
+    if (Object.keys(data).includes(publicAddress)) {
       return data[publicAddress].collections;
+    } else {
+      return null;
+    }
+  };
+
+  // Visit the link at the top of the file for the SkyDB document shape.
+  const getCollection = async (publicAddress: string, contractAddress: string) => {
+    const data = await getDataFromSkyDB();
+    if (Object.keys(data).includes(publicAddress)) {
+      return data[publicAddress].collections[contractAddress];
+    } else {
+      return null;
+    }
+  };
+
+  // Visit the link at the top of the file for the SkyDB document shape.
+  const getNFTsOfCollection = async (publicAddress: string, contractAddress: string) => {
+    const data = await getDataFromSkyDB();
+    if (Object.keys(data).includes(publicAddress)) {
+      return data[publicAddress].collections[contractAddress].NFTs;
     } else {
       return null;
     }
@@ -288,5 +308,6 @@ export default function useSkyDB(dataKey: string, seed: string): any {
     addNFTToCollection,
     updateCollectionProperties,
     getAddressByCollectionTitle,
+    getNFTsOfCollection
   };
 }

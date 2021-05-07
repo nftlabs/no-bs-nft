@@ -4,7 +4,14 @@ interface NFTMetadata {
     name: string;
     description: string;
     image: string;
-    metadataLink?: string;
+}
+
+interface NFT {
+    name: string;
+    description: string;
+    image: string;
+    amount: number;
+    metadataLink: string;
 }
 
 // / Uploads media file (image, video, pdf etc.) to skynet

@@ -35,7 +35,12 @@ export default function useCollection() {
     const [signer, setSigner] = useState<any>('');
 
     const { user } = useUser();
-    const { saveNewCollection } = useDefaultSkyDB();
+    const {
+        saveNewCollection,
+        getAllCollections,
+        getAddressByCollectionTitle,
+        getNFTsOfCollection,
+    } = useDefaultSkyDB();
 
     useEffect(() => {
         const provider = new ethers.providers.Web3Provider(MagicMaticClient.rpcProvider as any);
@@ -82,6 +87,23 @@ export default function useCollection() {
         return contractAddress;
     }
 
+    const saveCollection = async (
+        email: string,
+        title: string,
+        symbol: string,
+        nftObjects: NFTDraft[],
+    ) => {
+
+        const contractAddress = predictCollectionAddress(email, title, symbol);
+        await saveNewCollection(
+            user.publicAddress,
+            contractAddress,
+            title,
+            symbol,
+            nftObjects
+        )
+    }
+
     const predictCollectionAddress = async (
         email: string,
         title: string,
@@ -94,7 +116,30 @@ export default function useCollection() {
         );
     }
 
+    const getCollections = async (publicAddress: string) => {
+        const collections = await getAllCollections(publicAddress);
+
+        if(collections) {
+            return Object.keys(collections).map((contractAddress) => {
+                const collectionObject = collections[contractAddress];
+                collectionObject.contractAddress = contractAddress;
+            })
+        }
+        
+        return {};
+    }
+
+    const getNFTsInCollection  = async (publicAddress: string, collectionTitle: string) => {
+        const collectionAddress = await getAddressByCollectionTitle(publicAddress, collectionTitle);
+
+        const NFTs = await getNFTsOfCollection(publicAddress, collectionAddress);
+        return NFTs;
+    }
+
     return {
-        createNewCollection
+        createNewCollection,
+        getCollections,
+        getNFTsInCollection,
+        saveCollection
     }
 }

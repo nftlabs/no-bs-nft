@@ -1,42 +1,22 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
-import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { MagicMaticClient } from '../../../lib/magic';
 
 import useUser from '../../../lib/useUser';
-import { useDefaultSkyDB } from '../../../lib/useSkyDB';
-import createCollection from '../../../lib/createCollection';
-import { uploadMediaToSkynet, uploadMetadataToSkynet } from '../../../lib/skynet';
+import useSkynet from '../../../lib/hooks/useSkynet';
+import useNFT from '../../../lib/hooks/useNFT';
 
 import { ContentWrapper } from '../../../components/ContentWrapper';
 import { Button } from '@chakra-ui/button';
 import useCollection from '../../../lib/hooks/useCollection';
 
-interface NFTMetadata {
-    name: string;
-    description: string;
-    image: string;
-    metadataLink: string;
-}
-
-interface NFTData {
-    metadata: NFTMetadata;
-    amount: number;
-}
-interface NFTDraft {
+interface NFT {
     name: string;
     description: string;
     image: string;
     amount: number;
     metadataLink: string;
 }
-
-interface NFTToUpload {
-    metadataLink: string;
-    amount: number;
-}
-
 
 // If draft == true, then collectionIdentifier is the collection title.
 // If draft == false, then the collectionIdentifier is the collection's (i.e. the NFT contract's) address
@@ -57,21 +37,17 @@ function CreateNFTView({ draft, saveNFT, collectionTitle }: CreateNFTViewProps):
     const [amount, setAmount] = useState<number>(1);
     const [file, setFile] = useState<File | null>(null);
 
+    const { storeNFTMetadata } = useNFT();
+
     // If the collection is a draft (i.e. the collection / NFT contract has not been deployed)
     const handleNFTDraft = async () => {
-        // state variable `file: File[]` uploaded by user
-        const imageURI = await uploadMediaToSkynet(file);
+        
+        const { imageURI, metadataLink } = await storeNFTMetadata(name, description, file);
 
-        const metadataToUpload = {
+        const nftToSave: NFT = {
             name,
             description,
             image: imageURI,
-        };
-
-        const metadataLink: string = await uploadMetadataToSkynet(metadataToUpload);
-
-        const nftToSave: NFTDraft = {
-            ...metadataToUpload,
             metadataLink,
             amount,
         };
@@ -131,46 +107,37 @@ function CollectionView({
 
 export default function CollectionPage(): JSX.Element {
     const [createNFTView, setCreateNFTView] = useState<boolean>(false);
-    const [NFTs, setNFTs] = useState<(NFTDraft)[]>([]);
+    const [NFTs, setNFTs] = useState<(NFT)[]>([]);
 
     const collectionProperties = useRef<CollectionProperties>({
         title: 'untitled',
         symbol: 'untitled',
     });
+
     const isDraft = useRef<boolean>(false);
 
-    const { saveCollectionDraft, getDeployedCollection, getDraftCollection } = useDefaultSkyDB();
+    const { getNFTsInCollection, saveCollection } = useCollection(); 
+    
     const { user } = useUser();
     const router = useRouter();
-    const collectionName = router.query;
+    const { collectionName } = router.query;
 
     // Since the collection page is a 'save draft' type editable doc.
     useEffect(() => {
         // get NFTs from Db
         async function getNFTsFromDb() {
-            let collection = await getDeployedCollection(user.publicAddress, collectionName);
-
-            if (!collection) {
-                collection = await getDraftCollection(user.publicAddress, collectionName);
-                isDraft.current = true;
-            }
-            if (collection) {
-                setNFTs([...collection.NFTs]);
-                collectionProperties.current = {
-                    title: collection.title,
-                    symbol: collection.symbol,
-                };
-            }
+            const NFTsInCollection = await getNFTsInCollection(user.publicAddress, collectionName as string);
+            setNFTs(NFTsInCollection);
         }
 
         getNFTsFromDb();
-    }, [collectionName, getDeployedCollection, getDraftCollection, user]);
+    }, [collectionName, user]);
 
     const saveCollectionAsDraft = async (title: string, symbol: string) => {
-        await saveCollectionDraft(title, symbol, NFTs);
+        await saveCollection(user.email, title, symbol, NFTs);
     };
 
-    const saveNFTInDraft = async (nftObject: NFTDraft) => {
+    const saveNFTInDraft = async (nftObject: NFT) => {
         setNFTs([...NFTs, nftObject]);
     };
 
