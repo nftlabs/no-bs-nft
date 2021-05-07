@@ -12,10 +12,7 @@ import {
   Spinner,
   Text,
   useToast,
-  HStack,
 } from '@chakra-ui/react';
-
-import { ContentWrapper } from '../components/ContentWrapper';
 
 import useUser from '../lib/useUser';
 import { errorToast } from '../lib/toast';

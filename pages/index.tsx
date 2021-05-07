@@ -68,7 +68,7 @@ const LandingHero: React.FC<{ user: any; login: any }> = ({ user, login }) => {
   const router = useRouter();
 
   return (
-    <Stack width="100vw" minH="40vh" p={[4, 12]}>
+    <Stack width="100vw" minH="40vh" p={[4, 12]} pt={[12, 36]}>
       <Center>
         <Stack as={Flex} flexDir={['column-reverse', 'row']} width="100%" maxW="1000px">
           <Stack as={Flex} alignItems="center" textAlign="center">
