@@ -32,7 +32,7 @@ const LandingHeader: React.FC<{ user: any; logout: any }> = ({ user, logout }) =
       <Center>
         <HStack as={Flex} width="100%" maxW="1000px">
           <HStack flexGrow={1}>
-            <Image src="/openape_landing_logo.svg" mr={8} />
+            <Image src="/openape-banner-logo.svg" mr={8} height="40px"/>
             <Text variant="default" p={6} display={['none', 'block']}>
               Features
             </Text>
