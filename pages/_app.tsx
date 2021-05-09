@@ -1,3 +1,4 @@
+import '../styles/styles.css';
 import 'tailwindcss/tailwind.css';
 import React from 'react';
 import { AppProps } from 'next/app';

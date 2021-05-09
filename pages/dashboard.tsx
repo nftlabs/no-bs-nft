@@ -5,6 +5,7 @@ import { Box, Button, Center, Flex, HStack, Spinner, Stack, Text } from '@chakra
 import { LoggedInHeader } from '../components/LoggedInHeader';
 import { useRouter } from 'next/router';
 import useUser from '../lib/useUser';
+import useCollection from '../lib/hooks/useCollection';
 
 const DashboardCollectionList: React.FC<any> = () => {
   const collectionList = [];
@@ -20,6 +21,18 @@ const DashboardCollectionList: React.FC<any> = () => {
 DashboardCollectionList.displayName = 'DashboardCollectionList';
 
 const DashboardMain: React.FC<any> = () => {
+  const [collections, setCollections] = useState<any>([]);
+  const { user } = useUser();
+  const { getCollections } = useCollection();
+
+  useEffect(() => {
+    if (!collections) {
+      const c = getCollections(user.publicAddress);
+      console.log('getCollections', c);
+      setCollections(c);
+    }
+  }, [getCollections, collections, setCollections, user]);
+
   const router = useRouter();
   return (
     <Box>
