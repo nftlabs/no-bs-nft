@@ -16,18 +16,6 @@ import {
 
 import useUser from '../lib/useUser';
 import { errorToast } from '../lib/toast';
-import { compileERC721 } from '../lib/compile';
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { NFT, BidExecutor } = await compileERC721();
-
-  return {
-    props: {
-      NFT,
-      BidExecutor,
-    },
-  };
-};
 
 const validateEmail = (emailToValidate: string) => {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
