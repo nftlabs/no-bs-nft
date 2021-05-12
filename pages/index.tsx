@@ -32,7 +32,7 @@ const LandingHeader: React.FC<{ user: any; logout: any }> = ({ user, logout }) =
       <Center>
         <HStack as={Flex} width="100%" maxW="1000px">
           <HStack flexGrow={1}>
-            <Image src="/openape-banner-logo.svg" mr={8} height="40px"/>
+            <Image src="/openape-banner-logo.svg" mr={8} height="40px" />
             <Text variant="default" p={6} display={['none', 'block']}>
               Features
             </Text>
@@ -226,7 +226,7 @@ const LandingLogin: React.FC<{ user: any; login: any }> = ({ user, login }) => {
 LandingLogin.displayName = 'LandingLogin';
 
 const LandingFooter: React.FC<{}> = () => {
-  return <Stack width="100vw" minH="20vh"></Stack>;
+  return <></>;
 };
 
 LandingFooter.displayName = 'LandingFooter';

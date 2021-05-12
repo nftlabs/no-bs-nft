@@ -20,6 +20,18 @@ const DashboardCollectionList: React.FC<any> = () => {
 
 DashboardCollectionList.displayName = 'DashboardCollectionList';
 
+const DashboardComingSoon: React.FC<any> = () => {
+  return (
+    <Center height="100%" minH="90vh" width="100%">
+      <Stack>
+        <Text fontSize="xl">Welcome to Open Ape, you{"'"}re now on the wait list.</Text>
+        <Text>We{"'"}re letting creators in every day. Check back soon to get started!</Text>
+      </Stack>
+    </Center>
+  );
+};
+DashboardComingSoon.displayName = 'DashboardComingSoon';
+
 const DashboardMain: React.FC<any> = () => {
   const [collections, setCollections] = useState<any>([]);
   const { user } = useUser();
@@ -72,10 +84,10 @@ export default function Dashboard(): JSX.Element {
   }
 
   return (
-    <ContentWrapper height="100%">
-      <Stack>
+    <ContentWrapper height="100%" width="100%">
+      <Stack minHeight="100vh">
         <LoggedInHeader />
-        <DashboardMain />
+        <DashboardComingSoon />
       </Stack>
     </ContentWrapper>
   );
