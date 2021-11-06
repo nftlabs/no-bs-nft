@@ -24,7 +24,7 @@
         "@types/shelljs": "^0.8.8",
         "@web3-react/core": "^6.1.9",
         "@web3-react/injected-connector": "^6.0.7",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "chai": "^4.3.4",
         "dotenv": "^8.2.0",
         "ethereum-address": "^0.0.4",
