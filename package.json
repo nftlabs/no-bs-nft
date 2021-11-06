@@ -19,7 +19,7 @@
         "@nomiclabs/hardhat-ethers": "^2.0.2",
         "@nomiclabs/hardhat-etherscan": "^2.1.1",
         "@nomiclabs/hardhat-waffle": "^2.0.1",
-        "@openzeppelin/contracts": "^4.0.0",
+        "@openzeppelin/contracts": "^4.3.2",
         "@types/react-pdf": "^5.0.2",
         "@types/shelljs": "^0.8.8",
         "@web3-react/core": "^6.1.9",
